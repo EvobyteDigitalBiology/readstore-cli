@@ -1,10 +1,13 @@
-# readstore-basic/cli/rsconfig.py
+# readstore-cli/readstore_cli/rsconfig.py
 
 import os
 import configparser
 from typing import List, Tuple
 
-import rsexceptions
+try:
+    from readstore_cli import rsexceptions
+except ModuleNotFoundError:
+    import rsexceptions
 
 
 def load_rs_config(filename: str | None = None,
