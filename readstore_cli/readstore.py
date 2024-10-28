@@ -900,17 +900,18 @@ def main():
         index2_path = args.index2_path
         
         meta = args.meta
+        attachment = args.attachment
         
         if sum([read1, read2, index1, index2, 
                 read1_path, read2_path, index1_path, index2_path,
-                meta]) > 1:
-            sys.stderr.write('ReadStore Error: Only One Flag Allowed for -r1, -r2, -i1, -i2, -m, -r1p, -r2p, -i1p, -i2p\n\n')
+                meta, attachment]) > 1:
+            sys.stderr.write('ReadStore Error: Only One Flag Allowed for -r1, -r2, -i1, -i2, -m, -r1p, -r2p, -i1p, -i2p, -m, -a\n\n')
             get_fq_parser.print_help()
         else:
             get_fastq_dataset(dataset_id = args.id,
                         dataset_name = args.name,
                         meta = meta,
-                        attachment= args.attachment,
+                        attachment= attachment,
                         read1 = read1,
                         read2 = read2,
                         index1 = index1,
