@@ -1,4 +1,4 @@
-# readstore-basic/cli/rsexceptions.py
+# readstore-cli/readstore_cli/rsexceptions.py
 
 class ReadStoreError(Exception):
     """Base class for ReadStoreError exceptions."""
