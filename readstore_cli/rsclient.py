@@ -1,11 +1,9 @@
-# readstore-basic/cli/rsclient.py
+# readstore-cli/readstore_cli/rsclient.py
 
 import requests
 from urllib.parse import urlparse
 import json
-import hashlib
 import os
-import math
 import datetime
 import uuid
 import base64
@@ -13,7 +11,10 @@ import string
 import random
 from typing import Tuple, List, Dict
 
-import rsexceptions
+try:
+    from readstore_cli import rsexceptions
+except ModuleNotFoundError:
+    import rsexceptions
 
 
 class RSClient():
@@ -28,6 +29,7 @@ class RSClient():
     PROJECT_ATTACHMENT_ENDPOINT = "project_attachment/token/"
     UPLOAD_CHUNK_SIZE_MB = 100
     
+    
     def __init__(self, username: str, token: str, endpoint_url: str, output_format: str):
         
         self.username = username
@@ -40,6 +42,7 @@ class RSClient():
 
         if not self._auth_user_token():
             raise rsexceptions.ReadStoreError(f'User Authentication Failed\nUsername: {self.username}')
+
 
     def _test_server_connection(self) -> bool:
         """
@@ -63,6 +66,7 @@ class RSClient():
                     return False
             except requests.exceptions.ConnectionError:
                 return False
+    
     
     def _auth_user_token(self) -> bool:
         """
@@ -88,70 +92,7 @@ class RSClient():
         except requests.exceptions.ConnectionError:
             return False
         
-    # def _generate_short_uuid(self) -> str:
-    #     """Generate short uuid.
-
-    #     Generate a short uuid.
-    #     Length is defined to 22 chars.
-    #     UUIDs contain only alphanumeric characters.
         
-    #     Returns:
-    #         (str): short uuid
-    #     """
-        
-    #     # Generate a UUID4
-    #     uuid_bytes = uuid.uuid4().bytes
-        
-    #     # Encode the UUID bytes to base64
-    #     base64_uuid = base64.urlsafe_b64encode(uuid_bytes)
-        
-    #     # Decode base64 bytes to string and remove padding characters
-    #     short_uuid = base64_uuid.decode('utf-8').rstrip('=')
-        
-    #     allowed_chars = string.digits + string.ascii_lowercase + string.ascii_uppercase
-        
-    #     # Remove any underscores and dashes by random char
-    #     short_uuid = short_uuid.replace('_',
-    #                                     allowed_chars[random.randint(0, len(allowed_chars) - 1)])
-    #     short_uuid = short_uuid.replace('-',
-    #                                     allowed_chars[random.randint(0, len(allowed_chars) - 1)])
-        
-    #     return short_uuid
-    
-    # def _get_fastq_presigned_url(self, s3_key: str) -> Tuple[str, dict]: 
-    #     """Get presigned URL for Fastq Upload
-
-    #     Args:
-    #         s3_key: AWS S3 key for upload
-
-    #     Raises:
-    #         rsexceptions.ReadStoreError: If request failed
-
-    #     Returns:
-    #         Tuple[str, dict]: URL and fields
-    #     """
-        
-    #     payload = {'username': self.username,
-    #                 'token': self.token,
-    #                 'fastq_s3_key': s3_key}
-        
-    #     upload_url_endpoint = os.path.join(self.endpoint, self.PRESIGNED_FASTQ_URL_ENDPOINT)
-    #     upload_url_endpoint = upload_url_endpoint.strip('/') + '/'
-        
-    #     res = requests.post(upload_url_endpoint, json=payload)
-        
-    #     if res.status_code != 200:
-    #         res_message = res.json().get('message', 'No Message')
-    #         raise rsexceptions.ReadStoreError(f'Upload URL Request Failed: {res_message}')
-    #     else:
-    #         assert 'url' in res.json(), 'fastq_url Presigned URL Not Found'
-        
-    #     # Get url and fields
-    #     url = res.json().get('url')['url']
-    #     fields = res.json().get('url')['fields']
-        
-    #     return url, fields
-    
     def get_output_format(self) -> str:
         """
             Get Output Format set for client
@@ -161,6 +102,7 @@ class RSClient():
         """
         
         return self.output_format
+    
     
     def upload_fastq(self, fastq_files: List[str] | str):
         """
@@ -220,6 +162,7 @@ class RSClient():
         else:
             return res.json()[0]
     
+    
     def get_fq_file_upload_path(self, fq_file_id: int) -> str:
         """Get FASTQ file upload  path
         
@@ -241,6 +184,7 @@ class RSClient():
             raise rsexceptions.ReadStoreError('upload_path Not Found in FqFile entry')
     
         return fq_file.get('upload_path')
+    
     
     def list_fastq_datasets(self,
                             project_name: str | None = None,
@@ -377,6 +321,7 @@ class RSClient():
         else:
             return res.json()
 
+
     def get_project(self,
                     project_id: int | None = None,
                     project_name: str | None = None) -> Dict:
@@ -477,6 +422,7 @@ class RSClient():
             attachment = res.json()[0]
             with open(outpath, 'wb') as fh:
                 fh.write(base64.b64decode(attachment['body']))
+                
                 
     def download_fq_dataset_attachment(self,
                                        attachment_name: str,
