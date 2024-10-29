@@ -4,8 +4,6 @@ This ReadMe introduces ReadStore Data Platform, the lean solution for managing F
 
 **Please read the instructions carefully before using the app**. In particular the [Security, Permissions and Backup](#backup) section contains information related to data security and backup.
 
-!!!ADD: Info that a license key is required and link
-
 Find Tutorials and Intro Videos on 
 https://www.youtube.com/@evobytedigitalbio
 
