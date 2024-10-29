@@ -186,3 +186,5 @@ readstore_basic/backend/app/migrations/*
 
 #venv
 rs/*
+
+run_build.sh
