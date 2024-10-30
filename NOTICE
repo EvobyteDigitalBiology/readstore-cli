@@ -1,2 +1,10 @@
 readstore-cli
 Copyright 2024 EVOBYTE Digital Biology Dr. Jonathan Alles
+
+requests (https://requests.readthedocs.io/en/latest/)
+Licensed under the Apache License Version 2.0
+Copyright 2019 Kenneth Reitz
+
+python (https://www.python.org/)
+Licensed under the PSF License Agreement
+Copyright © 2001-2024 Python Software Foundation; All Rights Reserved
