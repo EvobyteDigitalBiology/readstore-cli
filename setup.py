@@ -11,7 +11,8 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/EvobyteDigitalBiology/readstore-cli",
     packages=find_packages(),
-    license="Commercial",
+    license="Apache-2.0 license",
+    license_files = ('LICENSE',),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
