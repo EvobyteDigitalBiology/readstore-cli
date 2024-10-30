@@ -388,4 +388,4 @@ See the LICENSE file for more information.
 
 ReadStore CLI is built upon the following open-source python packages and would like to thank all contributing authors, developers and partners.
 
-- Python (https://www.djangoproject.com/)
+- Python (https://www.python.org/)
