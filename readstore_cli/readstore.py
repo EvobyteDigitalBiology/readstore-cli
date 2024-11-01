@@ -393,7 +393,8 @@ def _validate_read_path(fq_file_path: str) -> bool:
     
     # Check if file exists
     if not os.path.isfile(fq_file_path):
-        sys.stderr.write(f'ReadStore Warning: FASTQ Not Found: {fq_file_path}\n')
+        sys.stderr.write(
+            f'ReadStore Warning: Upload Path of this FASTQ File could not be found: {fq_file_path}\n')
         return False
     # Check for read permission
     elif not os.access(fq_file_path, os.R_OK):
