@@ -291,6 +291,25 @@ upload_parser.add_argument('fastq_files',
                            nargs='+',
                            help='FASTQ Files to Upload')
 
+import_parser = subparsers.add_parser("import",
+                                      help='Import from File')
+
+import_subparser = import_parser.add_subparsers()
+
+import_fastq_parser = import_subparser.add_parser(
+    'fastq',
+    help='Import FASTQ Files',
+    prog='readstore import fastq',
+    usage='%(prog)s [options]',
+    description="Import FASTQ Files",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+import_fastq_parser.add_argument('fastq_template',
+                                type=str,
+                                nargs=1,
+                                help='FASTQ Template .csv File')
+
+
 download_fq_parser = subparsers.add_parser(
     "download",
     help='Download Dataset attachments',
@@ -328,6 +347,9 @@ config_parser.set_defaults(config_run=True)
 config_parser_list.set_defaults(config_list=True)
 
 upload_parser.set_defaults(upload_run=True)
+
+import_parser.set_defaults(import_run=True)
+import_fastq_parser.set_defaults(import_fastq_run=True)
 
 # Set role argument none for basic version
 list_fq_parser.set_defaults(list_fq_run=True, role=None)
@@ -545,8 +567,78 @@ def upload(fastq_files: List[str]):
             sys.stderr.write(f'\nReadStore Upload: Invalid FASTQ Extension: {fq}\n')
         else:
             client.upload_fastq(fq)
-    
 
+
+def import_fastq(fastq_template_csv: str):
+    """Upload fastq files from template
+
+    Upload fastq files defined in template csv file
+    Template csv file must have columns:
+    FASTQFileName, ReadType, UploadPath
+    
+    Args:
+        fastq_template_csv (str): Path to fastq template csv
+        
+    Raises:
+        rsexceptions.ReadStoreError: If file is not found or not a csv file
+        rsecxeptions.ReadStoreError: If upload path is not found
+        rsexceptions.ReadStoreError: If invalid FASTQ extension
+        rsexceptions.ReadStoreError: If invalid Read Type
+    """
+    
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    if not fastq_template_csv.endswith('.csv'):
+        sys.stderr.write('ReadStore Error: File is not a .csv file\n')
+        return
+    
+    if not os.path.isfile(fastq_template_csv):
+        sys.stderr.write(f'ReadStore Error: File Not Found: {fastq_template_csv}\n')
+        return
+    
+    fq_file_names = []
+    read_types = []
+    upload_paths = []
+    
+    with open(fastq_template_csv, 'r') as f:
+        header = False
+        for line in f.readlines():
+            line = line.rstrip('\n').split(',')
+            if not header:
+                header = line
+                if not all(e in ['FASTQFileName', 'ReadType', 'UploadPath'] for e in header):
+                    sys.stderr.write('ReadStore Error: Invalid Template Header, Must be FASTQFileName,ReadType,UploadPath\n')
+                else:
+                    header = True
+            else:
+                fq_file_name, read_type, upload_path  = line
+                
+                if not _validate_read_path(upload_path):
+                    sys.stderr.write(f'\nReadStore Upload: File Not Found: {upload_path}\n')
+                    
+                if not upload_path.endswith(tuple(DEFAULT_FASTQ_EXTENSIONS)):
+                    sys.stderr.write(f'\nReadStore Upload: Invalid FASTQ Extension: {upload_path}\n')
+                
+                if read_type not in ['R1', 'R2', 'I1', 'I2']:
+                    sys.stderr.write(f'ReadStore Error: Invalid Read Type for file: {upload_path}\n')
+
+                if fq_file_name == '':
+                    sys.stderr.write(f'ReadStore Error: Invalid Read Type for file: {upload_path}\n')
+
+                fq_file_names.append(fq_file_name)
+                read_types.append(read_type)
+                upload_paths.append(upload_path)
+            
+    for upload_path, fq_file_name, read_type in zip(upload_paths, fq_file_names, read_types):
+        print(f'ReadStore Upload: Start {fq_file_name}')
+        client.upload_fastq(upload_path, fq_file_name, read_type)
+            
+        
 def list_fq_datasets(project_name: str | None = None,
                      project_id: int | None = None,
                      role: str | None = None,
@@ -1132,7 +1224,14 @@ def main():
                                     outpath=args.outpath,
                                     project_id=args.id,
                                     project_name=args.name)
+    
+    elif 'import_fastq_run' in args:
         
+        import_fastq(args.fastq_template[0])
+    
+    elif 'import_run' in args:
+        import_parser.print_help()
+    
     elif 'project_run' in args:
         project_parser.print_help()
     
