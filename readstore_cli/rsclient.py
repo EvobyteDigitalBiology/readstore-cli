@@ -27,6 +27,7 @@ from urllib.parse import urlparse
 import os
 import base64
 from typing import List, Dict
+import string
 
 try:
     from readstore_cli import rsexceptions
@@ -65,7 +66,6 @@ class RSClient:
     FQ_ATTACHMENT_ENDPOINT = "fq_attachment/token/"
     PROJECT_ENDPOINT = "project/token/"
     PROJECT_ATTACHMENT_ENDPOINT = "project_attachment/token/"
-    UPLOAD_CHUNK_SIZE_MB = 100
 
     def __init__(
         self, username: str, token: str, endpoint_url: str, output_format: str
@@ -116,6 +116,7 @@ class RSClient:
             return False
         else:
             try:
+                
                 response = requests.head(self.endpoint)
 
                 if response.status_code == 200:
@@ -148,6 +149,24 @@ class RSClient:
         except requests.exceptions.ConnectionError:
             return False
 
+    
+    def validate_charset(self, query_str: str) -> bool:
+        """
+        Validate charset for query string
+
+        Args:
+            query_str (str): Query string to validate
+
+        Returns:
+            bool: 
+        """
+        
+        allowed = string.digits + string.ascii_lowercase + string.ascii_uppercase + '_-.@'
+        allowed = set(allowed)
+        
+        return set(query_str) <= allowed
+    
+    
     def get_output_format(self) -> str:
         """
         Get Output Format set for client
@@ -158,14 +177,23 @@ class RSClient:
 
         return self.output_format
 
-    def upload_fastq(self, fastq_files: List[str] | str):
+    def upload_fastq(self,
+                     fastq_path: str,
+                     fastq_name: str | None = None,
+                     read_type: str | None = None) -> None:
         """Upload Fastq Files
         
         Upload Fastq files to ReadStore.
         Check if file exists and has read permissions.
         
+        fastq_name: List of Fastq names for files to upload
+        read_type: List of read types for files to upload
+        
         Args:
-            fastq_files: List of Fastq files to upload
+            fastq_path: List of Fastq files to upload
+            fastq_name: List of Fastq names for files to upload
+            read_types: List of read types for files to upload
+            read_types: Must be in ['R1', 'R2', 'I1', 'I2']
             
         Raises:
             rsexceptions.ReadStoreError: If file not found
@@ -173,36 +201,44 @@ class RSClient:
             rsexceptions.ReadStoreError: If upload URL request failed
         """
 
-        if isinstance(fastq_files, str):
-            fastq_files = [fastq_files]
-
         fq_upload_endpoint = os.path.join(self.endpoint, self.FASTQ_UPLOAD_ENDPOINT)
 
         # Run parallel uploads of fastq files
-        for fq_file in fastq_files:
+        fastq_path = os.path.abspath(fastq_path)
+        
+        # Make sure file exists and
+        if not os.path.exists(fastq_path):
+            raise rsexceptions.ReadStoreError(f"File Not Found: {fastq_path}")
+        elif not os.access(fastq_path, os.R_OK):
+            raise rsexceptions.ReadStoreError(f"No read permissions: {fastq_path}")
 
-            fq_file = os.path.abspath(fq_file)
+        payload = {
+            "username": self.username,
+            "token": self.token,
+            "fq_file_path": fastq_path,
+        }
 
-            # Make sure file exists and
-            if not os.path.exists(fq_file):
-                raise rsexceptions.ReadStoreError(f"File Not Found: {fq_file}")
-            elif not os.access(fq_file, os.R_OK):
-                raise rsexceptions.ReadStoreError(f"No read permissions: {fq_file}")
+        if not fastq_name is None:
+            if fastq_name == "":
+                raise rsexceptions.ReadStoreError("Fastq Name Is Empty")
+            if not self.validate_charset(fastq_name):
+                raise rsexceptions.ReadStoreError("Invalid Fastq Name")
+            payload["fq_file_name"] = fastq_name
+        
+        if not read_type is None:
+            if read_type not in ["R1", "R2", "I1", "I2"]:
+                raise rsexceptions.ReadStoreError("Invalid Read Type")
+            payload["read_type"] = read_type
+        
+        res = requests.post(fq_upload_endpoint, json=payload)
+        
+        if res.status_code not in [200, 204]:
+            res_message = res.json().get("message", "No Message")
+            raise rsexceptions.ReadStoreError(
+                f"Upload URL Request Failed: {res_message}"
+            )
 
-            payload = {
-                "username": self.username,
-                "token": self.token,
-                "fq_file_path": fq_file,
-            }
-
-            res = requests.post(fq_upload_endpoint, json=payload)
-
-            if res.status_code not in [200, 204]:
-                res_message = res.json().get("message", "No Message")
-                raise rsexceptions.ReadStoreError(
-                    f"Upload URL Request Failed: {res_message}"
-                )
-
+    
     def get_fq_file(self, fq_file_id: int) -> Dict:
         """Get Fastq File
 
