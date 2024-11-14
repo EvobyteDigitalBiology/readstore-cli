@@ -167,13 +167,43 @@ token = myrandomtoken
 
 You can further edit the configuration of the CLI client from this configuration file. In case your ReadStore Django server is not run at the default port 8000, you need to update the `endpoint_url`. If you need to process FASTQ files with file endings other than those listed in `fastq_extensions`, you can modify the list.
 
-### Upload FASTQ files<a id="upload"></a>
+### Upload FASTQ Files<a id="upload"></a>
 
 For uploading FASTQ files your User Account needs to have `Staging Permission`. You can check this in the `Settings` page of your account. If you do not have `Staging Permission`, ask the ReadStore Server Admin to grant you permission.
 
 `readstore upload myfile_r1.fastq myfile_r2.fastq ...`
 
 This will upload the files and run the QC check. You can select several files at once using the `*` wildcard. It can take some time before FASTQ files are available in your `Staging` page depending on how large file are and how long the QC step takes.
+
+```
+usage: readstore upload [options]
+
+Upload FASTQ Files
+
+positional arguments:
+  fastq_files  FASTQ Files to Upload
+```
+
+### Import FASTQ files from .csv Template
+
+You can also import FASTQ files defined in a .csv template files.
+
+`readstore import fastq fastq_templates.csv`
+
+The template .csv must contain the columns `FASTQFileName`,`ReadType` and `UploadPath`
+
+- FASTQFileName: Name of the FASTQ file (used to group FASTQ files in datasets and set default dataset name)
+- ReadType: Should be R1, R2, I1 or I2 for for Read1/2 or Index1/2
+- UploadPath: FASTQ file path. ReadStore server needs read permissions to file.
+
+```
+usage: readstore import fastq [options]
+
+Import FASTQ Files
+
+positional arguments:
+  fastq_template  FASTQ Template .csv File
+```
 
 ### Access Projects<a id="projectaccess"></a>
 
@@ -361,6 +391,10 @@ With the `--attachment` argument you specify the name of the attachment file to 
 Use the `--outpath` to set a directory to download files to.
 
 Example `readstore download --id 2 -a myAttachment.csv -o ~/downloads`
+
+####  readstore import
+
+
 
 ## Contributing
 
