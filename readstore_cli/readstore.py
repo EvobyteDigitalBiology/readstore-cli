@@ -285,7 +285,13 @@ download_project_parser.add_argument('-o',
 
 # Upload Parser
 upload_parser = subparsers.add_parser("upload",
-                                      help='Upload FASTQ Files')
+                                      help='Upload FASTQ Files',
+                                       prog='readstore upload',
+                                       usage='%(prog)s [options]',
+                                       description="Upload FASTQ Files",
+                                       epilog='For help on a specific command, type "readstore <command> <subcommand> -h"'
+                                       )
+
 upload_parser.add_argument('fastq_files',
                            type=str,
                            nargs='+',
