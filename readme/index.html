@@ -1,0 +1,1088 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../reference/readstore/">
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Readme - ReadStore CLI Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#readstore-cli" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://evo-byte.com/readstore" title="ReadStore CLI Docs" class="md-header__button md-logo" aria-label="ReadStore CLI Docs" data-md-component="logo">
+      
+  <img src="../assets/BannerLarge.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadStore CLI Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Readme
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Readme
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../reference/readstore/" class="md-tabs__link">
+        
+  
+    
+  
+  readstore-cli package
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about/" class="md-tabs__link">
+        
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://evo-byte.com/readstore" title="ReadStore CLI Docs" class="md-nav__button md-logo" aria-label="ReadStore CLI Docs" data-md-component="logo">
+      
+  <img src="../assets/BannerLarge.png" alt="logo">
+
+    </a>
+    ReadStore CLI Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Readme
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Readme
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-lean-solution-for-managing-fastq-and-ngs-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Lean Solution for Managing FASTQ and NGS Data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security and Permissions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security and Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-accounts-and-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Accounts and Token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quickstart
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-configure-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Configure CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-upload-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Upload Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-stage-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Stage Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-access-datasets-via-the-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Access Datasets via the CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload-fastq-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upload FASTQ Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-fastq-files-from-csv-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import FASTQ files from .csv Template
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Access Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#readstore-project-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore project list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readstore-project-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore project get
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readstore-project-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore project download
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-datasets-and-fastq-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access Datasets and FASTQ Files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Access Datasets and FASTQ Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#readstore-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readstore-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore get
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readstore-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore download
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readstore-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      readstore import
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contributing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-you-can-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      How You Can Help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contribution-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contribution Workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credits-and-acknowledgments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Credits and Acknowledgments
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/readstore/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    readstore-cli package
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="readstore-cli">ReadStore CLI</h1>
+<p>This README describes the ReadStore Command Line Interface (CLI). </p>
+<p>The ReadStore CLI is used to upload FASTQ files to the ReadStore database and access Projects, Datasets, metadata and attachment files. The ReadStore CLI enables you to automate your bioinformatics pipelines and workflows and</p>
+<p>Check the <a href="https://github.com/EvobyteDigitalBiology/readstore">ReadStore Github repository</a> for more information how to get started.</p>
+<p>More infos on the ReadStore website https://evo-byte.com/readstore/</p>
+<p>Tutorials and Intro Videos: https://www.youtube.com/@evobytedigitalbio</p>
+<p>Blog posts and How-Tos: https://evo-byte.com/blog/</p>
+<p>For general questions reach out to info@evo-byte.com</p>
+<p>Happy analysis :)</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#backup">Security and Permissions</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#cliconfig">CLI Configuration</a></li>
+<li><a href="#upload">FASTQ Upload</a></li>
+<li><a href="#projectaccess">Access Projects</a></li>
+<li><a href="#datasetaccess">Access Datasets</a></li>
+</ul>
+</li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#acknowledgments">Credits and Acknowledgments</a></li>
+</ul>
+<h2 id="the-lean-solution-for-managing-fastq-and-ngs-data">The Lean Solution for Managing FASTQ and NGS Data</h2>
+<p>ReadStore is a platform for storing, managing, and integrating genomic data. It accelerates analysis and offers an easy way to manage and share FASTQ and NGS datasets. With built-in project and metadata management, ReadStore structures your workflows, and its collaborative user interface enhances teamwork — so you can focus on generating insights.</p>
+<p>The integrated web service allows you to retrieve data directly from ReadStore via the terminal Command-Line Interface (CLI) or through Python and R SDKs.</p>
+<p>The ReadStore Basic version provides a local web server with simple user management. For organization-wide deployment, advanced user and group management, or cloud integration, please check out the ReadStore Advanced versions and contact us at info@evo-byte.com.</p>
+<h2 id="description">Description</h2>
+<p>The ReadStore Command-Line Interface (CLI) is a powerful tool for uploading and managing your genomic data. With the ReadStore CLI, you can upload FASTQ files directly to the ReadStore database, as well as access and manage Projects, Datasets, metadata, and attachment files with ease.</p>
+<p>The CLI can be run from your shell or terminal and is designed for seamless integration into data pipelines and scripts, enabling efficient automation of data management tasks. This flexibility allows you to integrate the ReadStore CLI within any bioinformatics application or pipeline, streamlining data uploads, access, and organization within ReadStore.</p>
+<p>By embedding the ReadStore CLI in your bioinformatics workflows, you can improve efficiency, reduce manual tasks, and ensure your data is readily accessible for analysis and collaboration.</p>
+<h2 id="security-and-permissions">Security and Permissions<a id="backup"></a></h2>
+<p><strong>PLEASE READ AND FOLLOW THESE INSTRUCTIONS CAREFULLY!</strong></p>
+<h3 id="user-accounts-and-token">User Accounts and Token<a id="token"></a></h3>
+<p>Using the CLI with a ReadStore server requires an active User Account and a Token. You should <strong>never enter your user account password</strong> when working with the CLI.</p>
+<p>To retrieve your token:</p>
+<ol>
+<li>Login to the ReadStore web app via your browser</li>
+<li>Navigate to <code>Settings</code> page and click on <code>Token</code></li>
+<li>If needed you can regenerate your token (<code>Reset</code>). This will invalidate the previous token</li>
+</ol>
+<p>For uploading FASTQ files your User Account needs to have <code>Staging Permission</code>. If you can check this in the <code>Settings</code> page of your account. If you not have <code>Staging Permission</code>, ask the ReadStore server Admin to grant you permission.</p>
+<h3 id="cli-configuration">CLI Configuration</h3>
+<p>After running the <code>readstore configure</code> the first time, a configuration file is created in your home directory (<code>~/.readstore/config</code>) to store you credentials and CLI configuration.</p>
+<p>The config file is created with user-excklusive read-/write permissions (<code>chmod 600</code>), please make sure to keep the file permissions restricted.</p>
+<p>You find more information on the <a href="#cliconfig">configuration file</a> below.</p>
+<h2 id="installation">Installation</h2>
+<p><code>pip3 install readstore-cli</code></p>
+<p>You can perform the install in a conda or venv virtual environment to simplify package management.</p>
+<p>A local install is also possible</p>
+<p><code>pip3 install --user readstore-cli</code></p>
+<p>Make sure that <code>~/.local/bin</code> is on your <code>$PATH</code> in case you encounter problems when starting the server.</p>
+<p>Validate the install by running</p>
+<p><code>readstore -v</code></p>
+<p>This should print the ReadStore CLI version</p>
+<h2 id="usage">Usage</h2>
+<p>Detailed tutorials, videos and explanations are found on <a href="https://www.youtube.com/playlist?list=PLk-WMGySW9ySUfZU25NyA5YgzmHQ7yquv">YouTube</a> or on the <a href="https://evo-byte.com/blog"><strong>EVO</strong>BYTE blog</a>.</p>
+<h3 id="quickstart">Quickstart</h3>
+<p>Let's upload some FASTQ files.</p>
+<h4 id="1-configure-cli">1. Configure CLI</h4>
+<p>Make sure you have the ReadStore CLI installed and a running ReadStore server with your user registered.</p>
+<ol>
+<li>
+<p>Run <code>readstore configure</code></p>
+</li>
+<li>
+<p>Enter your username and <a href="#token">token</a></p>
+</li>
+<li>Select the default output of your CLI requests. You can choose between <code>text</code> outputs, comma-separated <code>csv</code> or <code>json</code>.</li>
+<li>Run <code>readstore configure list</code> and check if your credentials are correct. </li>
+</ol>
+<h4 id="2-upload-files">2. Upload Files</h4>
+<p>For uploading FASTQ files your User Account needs to have <code>Staging Permission</code>. If you can check this in the <code>Settings</code> page of your account. If you not have <code>Staging Permission</code>, ask the ReadStore Server Admin to grant you permission.</p>
+<p>Move to a folder that contains some FASTQ files</p>
+<p><code>readstore upload myfile_r1.fastq</code></p>
+<p>This will upload the file and run the QC check. You can select multiple files at once using the <code>*</code> wildcard.
+The fastq files need to have the default file endings <code>.fastq, .fastq.gz, .fq, .fq.gz</code>.</p>
+<h4 id="3-stage-files">3. Stage Files</h4>
+<p>Login to the web app on your browser and move to the <code>Staging</code> page. Here you find a list of all FASTQ files that you just uploaded. For larger files, the QC step can take a while to complete.</p>
+<p>FASTQ files are grouped into Datasets which you can <code>Check In</code>. Checked In Datasets appear in the <code>Datasets</code> page and can be accessed by the CLI.</p>
+<h4 id="4-access-datasets-via-the-cli">4. Access Datasets via the CLI</h4>
+<p>The ReadStore CLI enables programmatic access to Datasets and FASTQ files. Some examples are:</p>
+<p><code>readstore list</code>  List all FASTQ files</p>
+<p><code>readstore get --id 25</code>  Get detailed view on Dataset 25</p>
+<p><code>readstore get --id 25 --read1-path</code>  Get path for Read1 FASTQ file</p>
+<p><code>readstore get --id 25 --meta</code>  Get metadata for Dataset 25</p>
+<p><code>readstore project get --name cohort1 --attachment</code>  Get attachment files for Project "cohort1"</p>
+<p>You can find a full list of CLI commands below.</p>
+<h3 id="cli-configuration_1">CLI Configuration<a id="cliconfig"></a></h3>
+<p><code>readstore configure</code> manages the CLI configuration. To setup the configuration:</p>
+<ol>
+<li>
+<p>Run <code>readstore configure</code></p>
+</li>
+<li>
+<p>Enter your username and <a href="#token">token</a></p>
+</li>
+<li>Select the default output of your CLI requests. You can choose between <code>text</code> outputs, comma-separated <code>csv</code> or <code>json</code>.</li>
+<li>Run <code>readstore configure list</code> and check if your credentials are correct. </li>
+</ol>
+<p>If you already have a configuration in place, the CLI will ask whether you want to overwrite the existing credentials. Select <code>y</code> if yes.</p>
+<p>After running the <code>readstore configure</code> the first time, a configuration file is created in your home directory (<code>~/.readstore/config</code>).
+The config file is created with user-excklusive read-/write permissions (<code>chmod 600</code>), please make sure to keep the file permissions restricted.</p>
+<pre><code>[general]
+endpoint_url = http://localhost:8000
+fastq_extensions = ['.fastq', '.fastq.gz', '.fq', '.fq.gz']
+output = csv
+
+[credentials]
+username = myusername
+token = myrandomtoken
+</code></pre>
+<p>You can further edit the configuration of the CLI client from this configuration file. In case your ReadStore Django server is not run at the default port 8000, you need to update the <code>endpoint_url</code>. If you need to process FASTQ files with file endings other than those listed in <code>fastq_extensions</code>, you can modify the list.</p>
+<h3 id="upload-fastq-files">Upload FASTQ Files<a id="upload"></a></h3>
+<p>For uploading FASTQ files your User Account needs to have <code>Staging Permission</code>. You can check this in the <code>Settings</code> page of your account. If you do not have <code>Staging Permission</code>, ask the ReadStore Server Admin to grant you permission.</p>
+<p><code>readstore upload myfile_r1.fastq myfile_r2.fastq ...</code></p>
+<p>This will upload the files and run the QC check. You can select several files at once using the <code>*</code> wildcard. It can take some time before FASTQ files are available in your <code>Staging</code> page depending on how large file are and how long the QC step takes.</p>
+<pre><code>usage: readstore upload [options]
+
+Upload FASTQ Files
+
+positional arguments:
+  fastq_files  FASTQ Files to Upload
+</code></pre>
+<h3 id="import-fastq-files-from-csv-template">Import FASTQ files from .csv Template</h3>
+<p>You can also import FASTQ files defined in a .csv template files.</p>
+<p><code>readstore import fastq fastq_templates.csv</code></p>
+<p>The template .csv must contain the columns <code>FASTQFileName</code>,<code>ReadType</code> and <code>UploadPath</code></p>
+<ul>
+<li>FASTQFileName: Name of the FASTQ file (used to group FASTQ files in datasets and set default dataset name)</li>
+<li>ReadType: Should be R1, R2, I1 or I2 for for Read1/2 or Index1/2</li>
+<li>UploadPath: FASTQ file path. ReadStore server needs read permissions to file.</li>
+</ul>
+<pre><code>usage: readstore import fastq [options]
+
+Import FASTQ Files
+
+positional arguments:
+  fastq_template  FASTQ Template .csv File
+</code></pre>
+<h3 id="access-projects">Access Projects<a id="projectaccess"></a></h3>
+<p>There are 3 commands for accessing projects, <code>readstore project list</code>, <code>readstore project get</code> and <code>readstore project download</code>.</p>
+<ul>
+<li><code>list</code> provides an overview of project, metadata and attachments</li>
+<li><code>get</code> provides detailed information on individual projects and to its metadata and attachments</li>
+<li><code>download</code> lets you download attachment files of a project from the ReadStore database</li>
+</ul>
+<h4 id="readstore-project-list">readstore project list</h4>
+<pre><code>usage: readstore project ls [options]
+
+List Projects
+
+options:
+  -h, --help            show this help message and exit
+  -m, --meta            Get Metadata
+  -a, --attachment      Get Attachment
+  --output {json,text,csv}
+                        Format of command output (see config for default)
+</code></pre>
+<p>Show project id and name.</p>
+<p>The <code>-m/--meta</code> include metadata for projects as json string in output.</p>
+<p>The <code>-a/--attachment</code> include attachment names as list in output.</p>
+<p>Adapt the output format of the command using the <code>--output</code> options.</p>
+<h4 id="readstore-project-get">readstore project get</h4>
+<pre><code>usage: readstore project get [options]
+
+Get Project
+
+options:
+  -h, --help            show this help message and exit
+  -id , --id            Get Project by ID
+  -n , --name           Get Project by name
+  -m, --meta            Get only Metadata
+  -a, --attachment      Get only Attachment
+  --output {json,text,csv}
+                        Format of command output (see config for default)
+</code></pre>
+<p>Show project details for a project selected either by <code>--id</code> or the <code>--name</code> argument.
+The project details include description, date of creation, attachments and metadata</p>
+<p>The <code>-m/--meta</code> shows <strong>only</strong> the metadata with keys in header.</p>
+<p>The <code>-a/--attachment</code> shows <strong>only</strong> the attachments.</p>
+<p>Adapt the output format of the command using the <code>--output</code> options.</p>
+<p>Example: <code>readstore project get --id 2</code></p>
+<h4 id="readstore-project-download">readstore project download</h4>
+<pre><code>usage: readstore project download [options]
+
+Download Project Attachments
+
+options:
+  -h, --help          show this help message and exit
+  -id , --id          Select Project by ID
+  -n , --name         Select Project by name
+  -a , --attachment   Set Attachment Name to download
+  -o , --outpath      Download path or directory (default . )
+</code></pre>
+<p>Download attachment files for a project. Select a project selected either by <code>--id</code> or the <code>--name</code> argument.</p>
+<p>With the <code>--attachment</code> argument you specify the name of the attachment file to download.</p>
+<p>Use the <code>--outpath</code> to set a directory to download files to.</p>
+<p>Example <code>readstore project download --id 2 -a ProjectQC.pptx -o ~/downloads</code></p>
+<h3 id="access-datasets-and-fastq-files">Access Datasets and FASTQ Files<a id="datasetaccess"></a></h3>
+<p>There are 3 commands for accessing dataset, <code>readstore list</code>, <code>readstore get</code> and <code>readstore download</code>.</p>
+<ul>
+<li><code>list</code> provides an overview of datasets, metadata and attachments</li>
+<li><code>get</code> provides detailed information on an individual dataset and to its metadata and attachments and individual FASTQ read files and statistics.</li>
+<li><code>download</code> lets you download attachment files of a dataset</li>
+</ul>
+<h4 id="readstore-list">readstore list</h4>
+<pre><code>usage: readstore ls [options]
+
+List FASTQ Datasets
+
+options:
+  -h, --help            show this help message and exit
+  -p , --project-name   Subset by Project Name
+  -pid , --project-id   Subset by Project ID
+  -m, --meta            Get Metadata
+  -a, --attachment      Get Attachment
+  --output {json,text,csv}
+                        Format of command output (see config for default)
+</code></pre>
+<p>Show dataset id, name, description, qc_passed, paired_end, index_read, project_ids and project_names</p>
+<p><code>-p/--project-name</code> subset dataset from a specified project</p>
+<p><code>-pid/--project-id</code> subset dataset from a specified project</p>
+<p><code>-m/--meta</code> include metadata for datasets</p>
+<p><code>-a/--attachment</code> include attachment names as list for datasets</p>
+<p>Adapt the output format of the command using the <code>--output</code> options.</p>
+<h4 id="readstore-get">readstore get</h4>
+<pre><code>usage: readstore get [options]
+
+Get FASTQ Datasets and Files
+
+options:
+  -h, --help            show this help message and exit
+  -id , --id            Get Dataset by ID
+  -n , --name           Get Dataset by name
+  -m, --meta            Get only Metadata
+  -a, --attachment      Get only Attchments
+  -r1, --read1          Get Read 1 Data
+  -r2, --read2          Get Read 2 Data
+  -r1p, --read1-path    Get Read 1 FASTQ Path
+  -r2p, --read2-path    Get Read 2 FASTQ Path
+  -i1, --index1         Get Index 1 Data
+  -i2, --index2         Get Index 2 Data
+  -i1p, --index1-path   Get Index 1 FASTQ Path
+  -i2p, --index2-path   Get Index 2 FASTQ Path
+  --output {json,text,csv}
+                        Format of command output (see config for default)
+
+</code></pre>
+<p>Show details for a dataset selected either by <code>--id</code> or the <code>--name</code> argument.</p>
+<p><code>-m/--meta</code> shows <strong>only</strong> the metadata with keys in header.</p>
+<p><code>-a/--attachment</code> shows <strong>only</strong> the attachments.</p>
+<p><code>-r1/--read1</code> shows details for dataset Read 1 data (same for <code>--read2</code>, <code>--index1</code>, <code>--index2</code>)</p>
+<p><code>-r1p/--read1-path</code> returns path for dataset Read 1 (same for <code>--read2-path</code>, <code>--index1-path</code>, <code>--index2-path</code>)</p>
+<p>Adapt the output format of the command using the <code>--output</code> options.</p>
+<p>Example: <code>readstore get --id 2</code></p>
+<p>Example: <code>readstore get --id 2 --read1-path</code></p>
+<h4 id="readstore-download">readstore download</h4>
+<pre><code>usage: readstore download [options]
+
+Download Dataset attachments
+
+options:
+  -h, --help          show this help message and exit
+  -id , --id          Select Dataset by ID
+  -n , --name         Select Dataset by name
+  -a , --attachment   Set Attachment Name to download
+  -o , --outpath      Download path or directory (default . )
+</code></pre>
+<p>Download attachment files for a dataset. Select dataset either by <code>--id</code> or the <code>--name</code> argument.</p>
+<p>With the <code>--attachment</code> argument you specify the name of the attachment file to download.</p>
+<p>Use the <code>--outpath</code> to set a directory to download files to.</p>
+<p>Example <code>readstore download --id 2 -a myAttachment.csv -o ~/downloads</code></p>
+<h4 id="readstore-import">readstore import</h4>
+<h2 id="contributing">Contributing</h2>
+<p>Contributions make this project better! Whether you want to report a bug, improve documentation, or add new features, any help is welcomed!</p>
+<h3 id="how-you-can-help">How You Can Help</h3>
+<ul>
+<li>Report Bugs</li>
+<li>Suggest Features</li>
+<li>Improve Documentation</li>
+<li>Code Contributions</li>
+</ul>
+<h3 id="contribution-workflow">Contribution Workflow</h3>
+<ol>
+<li>Fork the repository and create a new branch for each contribution.</li>
+<li>Write clear, concise commit messages.</li>
+<li>Submit a pull request and wait for review.</li>
+</ol>
+<p>Thank you for helping make this project better!</p>
+<h2 id="license">License</h2>
+<p>The ReadStore CLI is licensed under an Apache 2.0 Open Source License.
+See the LICENSE file for more information.</p>
+<h2 id="credits-and-acknowledgments">Credits and Acknowledgments<a id="acknowledgments"></a></h2>
+<p>ReadStore CLI is built upon the following open-source python packages and would like to thank all contributing authors, developers and partners.</p>
+<ul>
+<li>Python (https://www.python.org/)</li>
+<li>Requests (https://requests.readthedocs.io/en/latest/)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 EVOBYTE Digital Biology Dr. Jonathan Alles
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/EvobyteDigitalBiology/readstore-cli" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annnotation", "content.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
