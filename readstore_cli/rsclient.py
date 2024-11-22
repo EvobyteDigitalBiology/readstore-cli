@@ -23,6 +23,7 @@ Classes:
 """
 
 import requests
+from requests.auth import HTTPBasicAuth
 from urllib.parse import urlparse
 import os
 import base64
@@ -58,15 +59,16 @@ class RSClient:
             download_fq_dataset_attachment: Download Fastq Attach
     """
     
-    REST_API_VERSION = "api_v1/"
-    USER_AUTH_TOKEN_ENDPOINT = "user/auth_token/"
+    REST_API_VERSION = "api_x_v1/"
+    USER_AUTH_TOKEN_ENDPOINT = "auth_token/"
     FASTQ_UPLOAD_ENDPOINT = "fq_file_upload/"
-    FQ_DATASET_ENDPOINT = "fq_dataset/token/"
-    FQ_FILE_ENDPOINT = "fq_file/token/"
-    FQ_ATTACHMENT_ENDPOINT = "fq_attachment/token/"
-    PROJECT_ENDPOINT = "project/token/"
-    PROJECT_ATTACHMENT_ENDPOINT = "project_attachment/token/"
-
+    FQ_DATASET_ENDPOINT = "fq_dataset/"
+    FQ_FILE_ENDPOINT = "fq_file/"
+    FQ_ATTACHMENT_ENDPOINT = "fq_attachment/"
+    PROJECT_ENDPOINT = "project/"
+    PROJECT_ATTACHMENT_ENDPOINT = "project_attachment/"
+    PRO_DATA_ENDPOINT = "pro_data/"
+    
     def __init__(
         self, username: str, token: str, endpoint_url: str, output_format: str
     ):
@@ -91,7 +93,8 @@ class RSClient:
         self.token = token
         self.endpoint = f"{endpoint_url}/{self.REST_API_VERSION}"
         self.output_format = output_format
-
+        self.auth = HTTPBasicAuth(username, token)
+        
         if not self._test_server_connection():
             raise rsexceptions.ReadStoreError(
                 f"Server Connection Failed\nEndpoint URL: {self.endpoint}"
@@ -116,7 +119,6 @@ class RSClient:
             return False
         else:
             try:
-                
                 response = requests.head(self.endpoint)
 
                 if response.status_code == 200:
@@ -137,10 +139,8 @@ class RSClient:
         try:
             auth_endpoint = os.path.join(self.endpoint, self.USER_AUTH_TOKEN_ENDPOINT)
 
-            payload = {"username": self.username, "token": self.token}
-
-            res = requests.post(auth_endpoint, json=payload)
-
+            res = requests.post(auth_endpoint, auth=self.auth)
+            
             if res.status_code != 200:
                 return False
             else:
@@ -176,6 +176,7 @@ class RSClient:
         """
 
         return self.output_format
+
 
     def upload_fastq(self,
                      fastq_path: str,
@@ -213,8 +214,6 @@ class RSClient:
             raise rsexceptions.ReadStoreError(f"No read permissions: {fastq_path}")
 
         payload = {
-            "username": self.username,
-            "token": self.token,
             "fq_file_path": fastq_path,
         }
 
@@ -230,10 +229,10 @@ class RSClient:
                 raise rsexceptions.ReadStoreError("Invalid Read Type")
             payload["read_type"] = read_type
         
-        res = requests.post(fq_upload_endpoint, json=payload)
+        res = requests.post(fq_upload_endpoint, json=payload, auth=self.auth)
         
         if res.status_code not in [200, 204]:
-            res_message = res.json().get("message", "No Message")
+            res_message = res.json().get("detail", "No Message")
             raise rsexceptions.ReadStoreError(
                 f"Upload URL Request Failed: {res_message}"
             )
@@ -253,14 +252,8 @@ class RSClient:
 
         fq_file_endpoint = os.path.join(self.endpoint, self.FQ_FILE_ENDPOINT)
 
-        # Define json for post request
-        json = {
-            "username": self.username,
-            "token": self.token,
-            "fq_file_id": fq_file_id,
-        }
 
-        res = requests.post(fq_file_endpoint, json=json)
+        res = requests.get(fq_file_endpoint + f'{fq_file_id}/',auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("get_fq_file Failed")
@@ -319,10 +312,7 @@ class RSClient:
         fq_dataset_endpoint = os.path.join(self.endpoint, self.FQ_DATASET_ENDPOINT)
 
         # Define json for post request
-        json = {
-            "username": self.username,
-            "token": self.token,
-        }
+        json = {}
 
         if role:
             if role.lower() in ["owner", "collaborator", "creator"]:
@@ -335,7 +325,7 @@ class RSClient:
         if project_id:
             json["project_id"] = project_id
 
-        res = requests.post(fq_dataset_endpoint, json=json)
+        res = requests.get(fq_dataset_endpoint, params=json, auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("list_fastq_datasets Failed")
@@ -368,14 +358,17 @@ class RSClient:
 
         fq_dataset_endpoint = os.path.join(self.endpoint, self.FQ_DATASET_ENDPOINT)
 
+        if dataset_id is None and dataset_name is None: 
+            raise rsexceptions.ReadStoreError("Dataset ID or Name Required")
+        
         # Define json for post request
-        json = {"username": self.username, "token": self.token}
+        json = {}
         if dataset_id:
-            json["dataset_id"] = dataset_id
+            json["id"] = dataset_id
         if dataset_name:
-            json["dataset_name"] = dataset_name
+            json["name"] = dataset_name
 
-        res = requests.post(fq_dataset_endpoint, json=json)
+        res = requests.get(fq_dataset_endpoint, params=json, auth=self.auth)
 
         # Remove entries not requested
         if res.status_code not in [200, 204]:
@@ -393,6 +386,7 @@ class RSClient:
                 )
             else:
                 return res.json()[0]
+
 
     def list_projects(self, role: str | None = None) -> List[Dict]:
         """List Projects
@@ -413,20 +407,20 @@ class RSClient:
         project_endpoint = os.path.join(self.endpoint, self.PROJECT_ENDPOINT)
 
         # Define json for post request
-        json = {"username": self.username, "token": self.token}
-
+        json = {}
         if role:
             if role.lower() in ["owner", "collaborator", "creator"]:
                 json["role"] = role
             else:
                 raise rsexceptions.ReadStoreError("Invalid Role")
 
-        res = requests.post(project_endpoint, json=json)
+        res = requests.get(project_endpoint, params=json, auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("list_projects Failed")
         else:
             return res.json()
+
 
     def get_project(
         self,
@@ -458,11 +452,11 @@ class RSClient:
         json = {"username": self.username, "token": self.token}
 
         if project_id:
-            json["project_id"] = project_id
+            json["id"] = project_id
         if project_name:
-            json["project_name"] = project_name
+            json["name"] = project_name
 
-        res = requests.post(project_endpoint, json=json)
+        res = requests.get(project_endpoint, params=json, auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("get_project Failed")
@@ -511,9 +505,7 @@ class RSClient:
 
         # Define json for post request
         json = {
-            "username": self.username,
-            "token": self.token,
-            "attachment_name": attachment_name,
+            "attachment_name": attachment_name
         }
 
         if project_id:
@@ -521,7 +513,7 @@ class RSClient:
         if project_name:
             json["project_name"] = project_name
 
-        res = requests.post(project_attachment_endpoint, json=json)
+        res = requests.get(project_attachment_endpoint, params=json, auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("download_project_attachment failed")
@@ -537,6 +529,7 @@ class RSClient:
             attachment = res.json()[0]
             with open(outpath, "wb") as fh:
                 fh.write(base64.b64decode(attachment["body"]))
+
 
     def download_fq_dataset_attachment(
         self,
@@ -567,8 +560,6 @@ class RSClient:
 
         # Define json for post request
         json = {
-            "username": self.username,
-            "token": self.token,
             "attachment_name": attachment_name,
         }
 
@@ -577,7 +568,7 @@ class RSClient:
         if dataset_name:
             json["dataset_name"] = dataset_name
 
-        res = requests.post(fq_dataset_endpoint, json=json)
+        res = requests.get(fq_dataset_endpoint, params=json, auth=self.auth)
 
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("download_fq_dataset_attachment failed")
@@ -593,3 +584,92 @@ class RSClient:
             attachment = res.json()[0]
             with open(outpath, "wb") as fh:
                 fh.write(base64.b64decode(attachment["body"]))
+
+    def upload_pro_data(self,
+                        name: str,
+                        pro_data_path: str,
+                        data_type: str,
+                        dataset_id: int,
+                        metadata: dict = {},
+                        description: str = "") -> None:
+        """Upload Processed Data
+
+        Upload Pro Data to ReadStore
+
+        Args:
+            pro_data: Pro Data in JSON format
+
+        Raises:
+            rsexceptions.ReadStoreError: If upload request failed
+        """
+
+        pro_data_endpoint = os.path.join(self.endpoint, self.PRO_DATA_ENDPOINT)
+        
+        # Run parallel uploads of fastq files
+        pro_data_path = os.path.abspath(pro_data_path)
+        
+        # Make sure file exists and
+        if not os.path.exists(pro_data_path):
+            raise rsexceptions.ReadStoreError(f"File Not Found: {pro_data_path}")
+        elif not os.access(pro_data_path, os.R_OK):
+            raise rsexceptions.ReadStoreError(f"No read permissions: {pro_data_path}")
+        
+        # Define json for post request
+        json = {
+            "name" : name,
+            "data_type": data_type,
+            "upload_path": pro_data_path,
+            "metadata": metadata,
+            "description" : description,
+            "fq_dataset": dataset_id
+        }
+
+        res = requests.post(pro_data_endpoint, json=json, auth=self.auth)
+
+        if res.status_code not in [201, 204]:
+            raise rsexceptions.ReadStoreError("upload_pro_data failed")
+        
+    def list_pro_data(self,
+                      project_id: int | None = None,
+                      project_name: str | None = None,
+                      dataset_id: int | None = None,
+                      dataset_name: str | None = None,
+                      data_type: str | None = None,
+                      include_archived: bool = False) -> List[Dict]:
+        
+        """List Processed Data
+
+        List Pro Data for Dataset
+
+        Args:
+            dataset_id: Dataset ID
+
+        Raises:
+            rsexceptions.ReadStoreError: If request failed
+
+        Returns:
+            List[Dict]: List of Pro Data
+        """
+
+        pro_data_endpoint = os.path.join(self.endpoint, self.PRO_DATA_ENDPOINT)
+
+        # Define json for post request
+        json = {
+            'project_id': project_id,
+            'project_name': project_name,
+            'dataset_id': dataset_id,
+            'dataset_name': dataset_name,
+            'data_type': data_type
+        }
+        
+        if not include_archived:
+            json['valid'] = True
+                    
+        res = requests.get(pro_data_endpoint, params=json, auth=self.auth)
+
+        print(res.status_code)
+        
+        if res.status_code not in [200, 204]:
+            raise rsexceptions.ReadStoreError("list_pro_data failed")
+        else:
+            return res.json()
