@@ -393,9 +393,25 @@ pro_data_upload_parser.add_argument('-n',
 pro_data_upload_parser.add_argument('-t', 
                                 '--type',
                                 type=str,
-                                help='Set Type of Processed Data (e.g. Gene Counts) (required)',
+                                help='Set Type of Processed Data (e.g. gene_counts) (required)',
                                 metavar='',
                                 required=True)                           
+
+pro_data_upload_parser.add_argument('--description',
+                                    type=str,
+                                    help='Set Description',
+                                    metavar='',
+                                    default='')                           
+
+pro_data_upload_parser.add_argument('-m', 
+                                '--meta',
+                                type=str,
+                                help='''Set metadata as JSON string (e.g '{"key": "value"}'')''',
+                                default='{}')                           
+
+pro_data_upload_parser.add_argument('pro_data_file', 
+                                    type=str,
+                                    help='Path to Processed Data File to Upload')                           
 
 pro_data_list_parser = pro_data_subparser.add_parser(
     "list",
@@ -430,6 +446,12 @@ pro_data_list_parser.add_argument('-d',
                                 help='Subset by Dataset Name',
                                 metavar='')
 
+pro_data_list_parser.add_argument('-n',
+                                '--name',
+                                type=str,
+                                help='Subset by ProData Name',
+                                metavar='')
+
 pro_data_list_parser.add_argument('-t', 
                                 '--type',
                                 type=str,
@@ -451,6 +473,100 @@ pro_data_list_parser.add_argument('--output',
                                     help='Format of command output (see config for default)',
                                     choices=OUTPUT_FORMATS)
 
+pro_data_get_parser = pro_data_subparser.add_parser(
+    "get",
+    help='Get Processed Data',
+    prog='readstore pro-data get',
+    usage='%(prog)s [options]',
+    description="Get Processed Data",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+pro_data_get_parser.add_argument('-id',
+                                '--id',
+                                type=int,
+                                help='Get ProData by ID',
+                                metavar='')
+
+pro_data_get_parser.add_argument('-d',
+                                '--dataset-name',
+                                type=str,
+                                help='Get ProData by Dataset Name',
+                                metavar='')
+
+pro_data_get_parser.add_argument('-did',
+                                '--dataset-id',
+                                type=int,
+                                help='Get ProData by Dataset ID',
+                                metavar='')
+
+pro_data_get_parser.add_argument('-n',
+                                '--name',
+                                type=str,
+                                help='Get ProData by Name',
+                                metavar='')
+
+pro_data_get_parser.add_argument('-m',
+                                '--meta',
+                                action='store_true',
+                                help='Get only Metadata')
+
+pro_data_get_parser.add_argument('-p',
+                                '--upload-path',
+                                action='store_true',
+                                help='Get only Upload Path')
+
+pro_data_get_parser.add_argument('-v',
+                                '--version',
+                                type=int,
+                                help='Get ProData Version (default: latest)',
+                                default=None,
+                                metavar='')
+
+pro_data_get_parser.add_argument('--output',
+                                type=str,
+                                help='Format of command output (see config for default)',
+                                choices=OUTPUT_FORMATS)
+
+# CONTINUE HERE: Delete Parser
+
+pro_data_delete_parser = pro_data_subparser.add_parser(
+    "delete",
+    help='Delete Processed Data',
+    prog='readstore pro-data delete',
+    usage='%(prog)s [options]',
+    description="Delete Processed Data",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+pro_data_delete_parser.add_argument('-id',
+                                '--id',
+                                type=int,
+                                help='Get ProData by ID',
+                                metavar='')
+
+pro_data_delete_parser.add_argument('-d',
+                                '--dataset-name',
+                                type=str,
+                                help='Get ProData by Dataset Name',
+                                metavar='')
+
+pro_data_delete_parser.add_argument('-did',
+                                '--dataset-id',
+                                type=int,
+                                help='Get ProData by Dataset ID',
+                                metavar='')
+
+pro_data_delete_parser.add_argument('-n',
+                                '--name',
+                                type=str,
+                                help='Get ProData by Name',
+                                metavar='')
+
+pro_data_delete_parser.add_argument('-v',
+                                    '--version',
+                                    type=int,
+                                    help='Get ProData Version (default: latest)',
+                                    default=None,
+                                    metavar='')
 
 
 # Help Parser
@@ -476,6 +592,9 @@ download_project_parser.set_defaults(download_project_run=True)
 pro_data_parser.set_defaults(pro_data_run=True)
 pro_data_upload_parser.set_defaults(pro_data_upload_run=True)
 pro_data_list_parser.set_defaults(pro_data_list_run=True)
+pro_data_get_parser.set_defaults(pro_data_get_run=True)
+pro_data_delete_parser.set_defaults(pro_data_delete_run=True)
+
 
 # TODO: option for custom config file path
 def _get_readstore_client() -> rsclient.RSClient:
@@ -680,7 +799,10 @@ def upload(fastq_files: List[str]):
         elif not fq.endswith(tuple(DEFAULT_FASTQ_EXTENSIONS)):
             sys.stderr.write(f'\nReadStore Upload: Invalid FASTQ Extension: {fq}\n')
         else:
-            client.upload_fastq(fq)
+            try:
+                client.upload_fastq(fq)
+            except rsexceptions.ReadStoreError as e:
+                sys.stderr.write(f'ReadStore Error: {e.message}\n')
 
 
 def import_fastq(fastq_template_csv: str):
@@ -750,8 +872,10 @@ def import_fastq(fastq_template_csv: str):
             
     for upload_path, fq_file_name, read_type in zip(upload_paths, fq_file_names, read_types):
         print(f'ReadStore Upload: Start {fq_file_name}')
-        client.upload_fastq(upload_path, fq_file_name, read_type)
-
+        try:
+            client.upload_fastq(upload_path, fq_file_name, read_type)
+        except rsexceptions.ReadStoreError as e:
+            sys.stderr.write(f'ReadStore Error: {e.message}\n')
 
 def upload_pro_data(name: str,
                     pro_data_file: str,
@@ -781,14 +905,18 @@ def upload_pro_data(name: str,
 
     print(f'ReadStore ProData Upload: Start {pro_data_file}')
     
-    client.upload_pro_data(name,
-                           pro_data_file,
-                           data_type,
-                           fq_dataset_id,
-                           metadata,
-                           description)
+    try:
+        client.upload_pro_data(name,
+                            pro_data_file,
+                            data_type,
+                            fq_dataset_id,
+                            metadata,
+                            description)
 
-        
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+
+
 def list_fq_datasets(project_name: str | None = None,
                      project_id: int | None = None,
                      role: str | None = None,
@@ -932,12 +1060,13 @@ def list_projects(role: str | None = None,
         sys.stderr.write(f'ReadStore Error: {e.message}\n')
         return
 
-def list_pro_data(project_name: str | None = None,
-                  project_id: int | None = None,
+def list_pro_data(project_id: int | None = None,
+                  project_name: str | None = None,
                   dataset_id: int | None = None,
                   dataset_name: str | None = None,
+                  name: str | None = None,
                   data_type: str | None = None,
-                  meta: str | None = None,
+                  meta: bool = False,
                   archived: bool = False,
                   output: str | None = None):
     """List Processed Data
@@ -967,10 +1096,11 @@ def list_pro_data(project_name: str | None = None,
         output = client.get_output_format()
     
     try:
-        pro_data = client.list_pro_data(project_name,
-                                        project_id,
+        pro_data = client.list_pro_data(project_id,
+                                        project_name,
                                         dataset_id,
                                         dataset_name,
+                                        name,
                                         data_type,
                                         archived)
         
@@ -1249,6 +1379,124 @@ def get_project(project_id: int | None = None,
         return
 
 
+def get_pro_data(pro_data_id: int | None = None,
+                 name: str | None = None,
+                 meta: bool = False,
+                 upload_path: bool = False,
+                 version: int | None = None,
+                 dataset_id: int | None = None,
+                 dataset_name: str | None = None,
+                 output: str | None = None):
+    
+    # Check that either pro_data_id 
+    # name + dataset_id/dataset_name is provided
+    if not pro_data_id:
+        if not name:
+            sys.stderr.write(
+                'ReadStore Error: Must provide ProData ID OR ProData Name (-n) plus Dataset ID (-did) or Dataset Name (-d)\n')
+            sys.stderr.write(
+                'ReadStore Error: Run readstore pro-data get -h for help\n')
+            return
+        if not dataset_id and not dataset_name:
+            sys.stderr.write(
+                'ReadStore Error: Must provide ProData ID OR ProData Name (-n) plus Dataset ID (-did) or Dataset Name (-d)\n')
+            sys.stderr.write(
+                'ReadStore Error: Run readstore pro-data get -h for help\n')
+            return
+    
+    # Get ReadStore Client and Validate Connection    
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    if output is None:
+        output = client.get_output_format()
+    
+    try:
+        out_data = client.get_pro_data(pro_data_id,
+                                        name,
+                                        version,
+                                        dataset_id,
+                                        dataset_name)
+        
+        if meta:
+            out_data = out_data.pop('metadata', {})
+        elif upload_path:
+            out_data = out_data.pop('upload_path', {})
+        
+        if output == 'json':
+            print(out_data)
+        elif output == 'text':
+            if upload_path:
+                print(out_data)
+            else:
+                header = list(out_data.keys())
+                header_str = ' | '.join(header)
+                print(header_str)
+                
+                values = [str(out_data[key]) for key in header]
+                values_str = ' | '.join(values)
+                print(values_str)
+        elif output == 'csv':
+            if upload_path:
+                print(out_data)
+            else:
+                header = list(out_data.keys())
+                header_str = ','.join(header)
+                print(header_str)
+                
+                values = [str(out_data[key]) for key in header]
+                values_str = ','.join(values)
+                print(values_str)
+    
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+
+def delete_pro_data(pro_data_id: int | None = None,
+                    name: str | None = None,
+                    version: int | None = None,
+                    dataset_id: int | None = None,
+                    dataset_name: str | None = None):
+    
+    if not pro_data_id:
+        if not name:
+            sys.stderr.write(
+                'ReadStore Error: Must provide ProData ID OR ProData Name (-n) plus Dataset ID (-did) or Dataset Name (-d)\n')
+            sys.stderr.write(
+                'ReadStore Error: Run readstore pro-data get -h for help\n')
+            return
+        if not dataset_id and not dataset_name:
+            sys.stderr.write(
+                'ReadStore Error: Must provide ProData ID OR ProData Name (-n) plus Dataset ID (-did) or Dataset Name (-d)\n')
+            sys.stderr.write(
+                'ReadStore Error: Run readstore pro-data get -h for help\n')
+            return
+        
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    try:
+        res = client.delete_pro_data(pro_data_id,
+                                    name,
+                                    dataset_id,
+                                    dataset_name,
+                                    version)
+        
+        print(f'ReadStore ProData Deleted: {res}\n')
+    except rsexceptions.ReadStoreError as e:
+        if 'ProData not found' in e.message:
+            sys.stderr.write(f'ReadStore Error: ProData not found\n')
+        else:
+            sys.stderr.write(f'ReadStore Error: {e.message}\n')
+
+
 def download_fq_dataset_attachment(attachment_name: str,
                                    outpath: str,
                                    dataset_id: int | None = None,
@@ -1363,6 +1611,8 @@ def download_project_attachment(attachment_name: str,
         sys.stderr.write(f'ReadStore Error: {e.message}\n')
         return
 
+
+
 def main():
     """
     Main function for ReadStore CLI
@@ -1371,12 +1621,8 @@ def main():
     
     args = parser.parse_args()
     
-    if args.version:
-        print(f'ReadStore CLI Version: {__version__}')
-        sys.exit(0)
-    
     # Keep hierarchy of commands. First check for subparsers.
-    elif 'config_list' in args:
+    if 'config_list' in args:
         configure_list()
     
     elif 'config_run' in args:
@@ -1482,17 +1728,39 @@ def main():
                         dataset_name=args.dataset_name)
 
     elif 'pro_data_list_run' in args:
-        list_pro_data(project_name=args.project_name,
-                      project_id=args.project_id,
+        list_pro_data(project_id=args.project_id,
+                      project_name=args.project_name,
                       dataset_id=args.dataset_id,
                       dataset_name=args.dataset_name,
+                      name=args.name,
                       data_type=args.type,
                       meta=args.meta,
                       archived=args.archived,
                       output=args.output)
     
+    elif 'pro_data_get_run' in args:
+        get_pro_data(pro_data_id=args.id,
+                     name=args.name,
+                     meta=args.meta,
+                     upload_path=args.upload_path,
+                     version=args.version,
+                     dataset_id=args.dataset_id,
+                     dataset_name=args.dataset_name,
+                     output=args.output)
+    
+    elif 'pro_data_delete_run' in args:
+        delete_pro_data(pro_data_id=args.id,
+                        name=args.name,
+                        version=args.version,
+                        dataset_id=args.dataset_id,
+                        dataset_name=args.dataset_name)
+    
     elif 'pro_data_run' in args:
         pro_data_parser.print_help()
+    
+    elif args.version:
+        print(f'ReadStore CLI Version: {__version__}')
+        sys.exit(0)
     
     else:
         parser.print_help()
