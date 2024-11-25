@@ -626,7 +626,9 @@ class RSClient:
 
         res = requests.post(pro_data_endpoint, json=json, auth=self.auth)
 
-        if res.status_code not in [201, 204]:
+        if res.status_code == 403:
+            raise rsexceptions.ReadStoreError(f"Upload ProData Failed: {res.json().get('detail')}")
+        elif res.status_code not in [201, 204]:
             raise rsexceptions.ReadStoreError("upload_pro_data failed")
         
     def list_pro_data(self,
@@ -634,9 +636,9 @@ class RSClient:
                       project_name: str | None = None,
                       dataset_id: int | None = None,
                       dataset_name: str | None = None,
+                      name: str | None = None,
                       data_type: str | None = None,
                       include_archived: bool = False) -> List[Dict]:
-        
         """List Processed Data
 
         List Pro Data for Dataset
@@ -659,6 +661,7 @@ class RSClient:
             'project_name': project_name,
             'dataset_id': dataset_id,
             'dataset_name': dataset_name,
+            'name': name,
             'data_type': data_type
         }
         
@@ -666,10 +669,123 @@ class RSClient:
             json['valid'] = True
                     
         res = requests.get(pro_data_endpoint, params=json, auth=self.auth)
-
-        print(res.status_code)
         
         if res.status_code not in [200, 204]:
             raise rsexceptions.ReadStoreError("list_pro_data failed")
         else:
             return res.json()
+        
+        
+    def get_pro_data(self,
+                    pro_data_id: int | None = None,
+                    name: str | None = None,
+                    version: int | None = None,
+                    dataset_id: int | None = None,
+                    dataset_name: str | None = None) -> List[Dict]:   
+        
+        """List Processed Data
+
+        List Pro Data for Dataset
+
+        Args:
+            dataset_id: Dataset ID
+
+        Raises:
+            rsexceptions.ReadStoreError: If request failed
+
+        Returns:
+            List[Dict]: List of Pro Data
+        """
+
+        if not pro_data_id:
+            assert name and (dataset_id or dataset_name), "name and dataset_id or dataset_name required"
+            
+        pro_data_endpoint = os.path.join(self.endpoint, self.PRO_DATA_ENDPOINT)
+        
+        if not version:
+            valid = 'true'
+        else:
+            valid = 'false'
+        
+    
+        # Define json for post request
+        json = {
+            'dataset_id': dataset_id,
+            'dataset_name': dataset_name,
+            'name': name,
+            'version': version,
+            'valid': valid,
+            'detail': 'true'
+        }
+                
+        if pro_data_id:
+            res = requests.get(pro_data_endpoint + f'{pro_data_id}/', auth=self.auth)
+        else:
+            res = requests.get(pro_data_endpoint, params=json, auth=self.auth)
+        
+        if res.status_code not in [200, 204]:
+            raise rsexceptions.ReadStoreError("list_pro_data failed")
+        else:
+            if len(res.json()) == 0:
+                return {}
+            # If several datasets found, return error
+            elif len(res.json()) > 1:
+                raise rsexceptions.ReadStoreError(
+                    """Multiple Projects Found.\n
+                This can happen if Projects with identical name were shared with you.\n
+                Use unique Project ID to access the correct dataset."""
+                )
+            else:
+                return res.json()[0]
+            
+    def delete_pro_data(self,
+                        pro_data_id: int | None = None,
+                        name: str | None = None,
+                        dataset_id: int | None = None,
+                        dataset_name: str | None = None,
+                        version: int | None = None) -> List[Dict]:   
+            
+        """Delete Processed Data
+
+        Delete Pro Data for Dataset
+
+        Args:
+            dataset_id: Dataset ID
+
+        Raises:
+            rsexceptions.ReadStoreError: If request failed
+
+        Returns:
+            List[Dict]: List of Pro Data
+        """
+
+        if not pro_data_id:
+            assert name and (dataset_id or dataset_name), "name and dataset_id or dataset_name required"
+
+        pro_data_endpoint = os.path.join(self.endpoint, self.PRO_DATA_ENDPOINT)
+
+        # Define json for post request
+        json = {
+            'dataset_id': dataset_id,
+            'dataset_name': dataset_name,
+            'name': name,
+            'version': version,
+        }
+
+        if pro_data_id:
+            res = requests.delete(pro_data_endpoint + f'{pro_data_id}/', auth=self.auth)
+        else:
+            res = requests.delete(pro_data_endpoint, params=json, auth=self.auth)
+        
+        if res.status_code == 400:
+            detail = res.json().get('detail', 'No Message')
+            if detail == 'ProData not found':
+                raise rsexceptions.ReadStoreError("ProData not found")
+            else:
+                raise rsexceptions.ReadStoreError("delete_pro_data failed")
+        elif res.status_code == 403:
+            raise rsexceptions.ReadStoreError(f"ProData Delete Failed: {res.json().get('detail')}")
+        elif res.status_code in [200, 204]:
+            return res.json().get('id')
+        else:
+            raise rsexceptions.ReadStoreError("delete_pro_data failed")
