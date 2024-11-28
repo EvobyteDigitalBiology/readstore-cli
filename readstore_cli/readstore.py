@@ -102,15 +102,16 @@ list_fq_parser = subparsers.add_parser(
     description="List FASTQ Datasets",
     epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
 
-list_fq_parser.add_argument('-p',
-                            '--project-name',
-                            type=str,
-                            help='Subset by Project Name',
-                            metavar='')
+
 list_fq_parser.add_argument('-pid',
                             '--project-id',
                             type=int,
                             help='Subset by Project ID',
+                            metavar='')
+list_fq_parser.add_argument('-p',
+                            '--project-name',
+                            type=str,
+                            help='Subset by Project Name',
                             metavar='')
 list_fq_parser.add_argument('-m',
                             '--meta',
@@ -188,7 +189,6 @@ get_fq_parser.add_argument('-i2',
                            '--index2',
                            action='store_true',
                            help='Get Index 2 Data')
-
 get_fq_parser.add_argument('-i1p',
                            '--index1-path',
                            action='store_true',
@@ -406,7 +406,7 @@ pro_data_upload_parser.add_argument('--description',
 pro_data_upload_parser.add_argument('-m', 
                                 '--meta',
                                 type=str,
-                                help='''Set metadata as JSON string (e.g '{"key": "value"}'')''',
+                                help='''Set metadata as JSON string (e.g '{"key": "value"}')''',
                                 default='{}')                           
 
 pro_data_upload_parser.add_argument('pro_data_file', 
@@ -422,16 +422,16 @@ pro_data_list_parser = pro_data_subparser.add_parser(
     description="List Processed Data",
     epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
 
-pro_data_list_parser.add_argument('-p',
-                                    '--project-name',
-                                    type=str,
-                                    help='Subset by Project Name',
-                                    metavar='')
-
 pro_data_list_parser.add_argument('-pid',
                                     '--project-id',
                                     type=int,
                                     help='Subset by Project ID',
+                                    metavar='')
+
+pro_data_list_parser.add_argument('-p',
+                                    '--project-name',
+                                    type=str,
+                                    help='Subset by Project Name',
                                     metavar='')
 
 pro_data_list_parser.add_argument('-did',
@@ -487,16 +487,16 @@ pro_data_get_parser.add_argument('-id',
                                 help='Get ProData by ID',
                                 metavar='')
 
-pro_data_get_parser.add_argument('-d',
-                                '--dataset-name',
-                                type=str,
-                                help='Get ProData by Dataset Name',
-                                metavar='')
-
 pro_data_get_parser.add_argument('-did',
                                 '--dataset-id',
                                 type=int,
                                 help='Get ProData by Dataset ID',
+                                metavar='')
+
+pro_data_get_parser.add_argument('-d',
+                                '--dataset-name',
+                                type=str,
+                                help='Get ProData by Dataset Name',
                                 metavar='')
 
 pro_data_get_parser.add_argument('-n',
@@ -540,31 +540,31 @@ pro_data_delete_parser = pro_data_subparser.add_parser(
 pro_data_delete_parser.add_argument('-id',
                                 '--id',
                                 type=int,
-                                help='Get ProData by ID',
-                                metavar='')
-
-pro_data_delete_parser.add_argument('-d',
-                                '--dataset-name',
-                                type=str,
-                                help='Get ProData by Dataset Name',
+                                help='Delete ProData by ID',
                                 metavar='')
 
 pro_data_delete_parser.add_argument('-did',
                                 '--dataset-id',
                                 type=int,
-                                help='Get ProData by Dataset ID',
+                                help='Delete ProData by Dataset ID',
+                                metavar='')
+
+pro_data_delete_parser.add_argument('-d',
+                                '--dataset-name',
+                                type=str,
+                                help='Delete ProData by Dataset Name',
                                 metavar='')
 
 pro_data_delete_parser.add_argument('-n',
                                 '--name',
                                 type=str,
-                                help='Get ProData by Name',
+                                help='Delete ProData by Name',
                                 metavar='')
 
 pro_data_delete_parser.add_argument('-v',
                                     '--version',
                                     type=int,
-                                    help='Get ProData Version (default: latest)',
+                                    help='Delete ProData Version (default: latest)',
                                     default=None,
                                     metavar='')
 
