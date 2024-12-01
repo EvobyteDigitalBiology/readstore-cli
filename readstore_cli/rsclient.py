@@ -589,7 +589,8 @@ class RSClient:
                         name: str,
                         pro_data_path: str,
                         data_type: str,
-                        dataset_id: int,
+                        dataset_id: int | None = None,
+                        dataset_name: str | None = None,
                         metadata: dict = {},
                         description: str = "") -> None:
         """Upload Processed Data
@@ -621,16 +622,21 @@ class RSClient:
             "upload_path": pro_data_path,
             "metadata": metadata,
             "description" : description,
-            "fq_dataset": dataset_id
         }
+        
+        if dataset_id:
+            json['dataset_id'] = dataset_id
+        if dataset_name:
+            json['dataset_name'] = dataset_name        
 
         res = requests.post(pro_data_endpoint, json=json, auth=self.auth)
-
+        
         if res.status_code == 403:
             raise rsexceptions.ReadStoreError(f"Upload ProData Failed: {res.json().get('detail')}")
         elif res.status_code not in [201, 204]:
             raise rsexceptions.ReadStoreError("upload_pro_data failed")
         
+
     def list_pro_data(self,
                       project_id: int | None = None,
                       project_name: str | None = None,
