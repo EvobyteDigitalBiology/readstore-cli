@@ -44,7 +44,7 @@ The ReadStore Basic version provides a local web server with simple user managem
 
 ## Description
 
-The ReadStore Command-Line Interface (CLI) is a powerful tool for uploading and managing your genomic data. With the ReadStore CLI, you can upload FASTQ files directly to the ReadStore database, as well as access and manage Projects, Datasets, metadata, and attachment files with ease.
+The ReadStore Command-Line Interface (CLI) is a powerful tool for uploading and managing your omics data. With the ReadStore CLI, you can upload FASTQ files and **Pro**cessed **Data** directly to the ReadStore database, as well as access and manage Projects, Datasets, metadata, and attachment files with ease.
 
 The CLI can be run from your shell or terminal and is designed for seamless integration into data pipelines and scripts, enabling efficient automation of data management tasks. This flexibility allows you to integrate the ReadStore CLI within any bioinformatics application or pipeline, streamlining data uploads, access, and organization within ReadStore.
 
