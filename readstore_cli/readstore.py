@@ -909,9 +909,9 @@ def upload_pro_data(name: str,
         client.upload_pro_data(name,
                             pro_data_file,
                             data_type,
-                            fq_dataset_id,
-                            metadata,
-                            description)
+                            dataset_id = fq_dataset_id,
+                            metadata = metadata,
+                            description = description)
 
     except rsexceptions.ReadStoreError as e:
         sys.stderr.write(f'ReadStore Error: {e.message}\n')
