@@ -32,12 +32,13 @@ Happy analysis :)
 - [License](#license)
 - [Credits and Acknowledgments](#acknowledgments)
 
-## The Lean Solution for Managing FASTQ and NGS Data
+
+## The Lean Solution for Managing NGS and Omics Data
 
 ReadStore is a platform for storing, managing, and integrating genomic data. It accelerates analysis and offers an easy way to manage and share FASTQ file, NGS datasets and processed datasets. 
 With built-in project and metadata management, ReadStore structures your workflows, and its collaborative user interface enhances teamwork — so you can focus on generating insights.
 
-The integrated web service allows you to retrieve data directly from ReadStore via the terminal Command-Line Interface (CLI) or through Python and R SDKs.
+The integrated Webservice (API) enables your to directly retrieve data from ReadStore via the terminal [Command-Line-Interface (CLI)](https://github.com/EvobyteDigitalBiology/readstore-cli) or [Python](https://github.com/EvobyteDigitalBiology/pyreadstore) / [R](https://github.com/EvobyteDigitalBiology/r-readstore) SDKs. 
 
 The ReadStore Basic version provides a local web server with simple user management. For organization-wide deployment, advanced user and group management, or cloud integration, please check out the ReadStore Advanced versions and contact us at info@evo-byte.com.
 
@@ -211,15 +212,16 @@ positional arguments:
 
 ### Import FASTQ files from .csv Template<a id="import_template"></a>
 
-You can also import FASTQ files defined in a .csv template files.
+Import FASTQ files from template .csv file.
 
-`readstore import fastq fastq_templates.csv`
+A `.csv` file can be downloaded from the ReadStore App in the `Staging` Page or from this repository, 
+or is available in this repository under assets/readstore_template.csv
 
-The template .csv must contain the columns `FASTQFileName`,`ReadType` and `UploadPath`
+The template .csv file must contain the columns `FASTQFileName`,`ReadType` &	`UploadPath`.
 
-- FASTQFileName: Name of the FASTQ file (used to group FASTQ files in datasets and set default dataset name)
-- ReadType: Should be R1, R2, I1 or I2 for for Read1/2 or Index1/2
-- UploadPath: FASTQ file path. ReadStore server needs read permissions to file.
+- **FASTQFileName** Name for the FASTQ File in ReadStore DB
+- **ReadType** FASTQ Read Type: R1 (Read 1), R2 (Read 2), I1 (Index 1) or I2 (Index 2)
+- **Upload Path** File path to FASTQ file. Must be accessible from ReadStore server
 
 ```
 usage: readstore import fastq [options]
@@ -541,29 +543,6 @@ Delete **Pro**cessed **Data** by their `-id` or the associated `--dataset-id / -
 `-v/--version` Delete ProData by specific version (Optional). Default: latest version.
 
 Example: `readstore pro-data delete -d test_dataset_1 -n test_dataset_count_matrix`
-
-
-####  readstore import fastq
-
-```
-usage: readstore import fastq [options]
-
-Import FASTQ Files
-
-positional arguments:
-  fastq_template  FASTQ Template .csv File
-```
-
-Import FASTQ files from template .csv file.
-
-A `.csv` file can be downloaded from the ReadStore App in the `Staging` Page or from this repository
-
-The template .csv file must contain the columns `FASTQFileName`,`ReadType` &	`UploadPath`.
-# TODO Define Template file
-
-- **FASTQFileName** Name for the FASTQ File in ReadStore DB
-- **ReadType** FASTQ Read Type: R1 (Read 1), R2 (Read 2), I1 (Index 1) or I2 (Index 2)
-- **Upload Path** File path to FASTQ file. Must be accessible from ReadStore server
 
 
 ## Contributing
