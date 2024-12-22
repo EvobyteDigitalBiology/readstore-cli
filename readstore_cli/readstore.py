@@ -325,7 +325,6 @@ import_fastq_parser.add_argument('fastq_template',
                                 nargs=1,
                                 help='FASTQ Template .csv File')
 
-
 download_fq_parser = subparsers.add_parser(
     "download",
     help='Download Dataset attachments',
@@ -1196,7 +1195,10 @@ def get_fastq_dataset(dataset_id: int | None = None,
         
         path = False
         
-        if meta:
+        # Check if dataset is empty
+        if fq_dataset == {}:
+            out_data = {}
+        elif meta:
             out_data = fq_dataset.pop('metadata', {})
         elif attachment:
             out_data = fq_dataset.pop('attachments', {})
