@@ -1,9 +1,9 @@
 name: ci 
 on:
-  push:
-    branches:
-      - master 
-      - main
+    push:
+        tags:
+        - 'v*' # Trigger the workflow on push events for tags like v1.0.0, v2.0.0, etc.
+
 permissions:
   contents: write
 jobs:
