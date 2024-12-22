@@ -31,7 +31,6 @@ nav:
   - Home: index.md
   - Readme: readme.md
   - readstore-cli package: reference/readstore.md
-  - About: about.md
   
 extra_css:
   - stylesheets/extra.css
