@@ -1,3 +1,8 @@
+![GitHub Release](https://img.shields.io/github/v/release/EvobyteDigitalBiology/readstore-cli)
+![PyPI - Version](https://img.shields.io/pypi/v/readstore-cli)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+
+
 # ReadStore CLI
 
 This README describes the ReadStore Command Line Interface (CLI). 
