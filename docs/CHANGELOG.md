@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.2.0] - 2024-12-22
+
+**Features**
+- Update rsbasic client to complete CRUD methods (create, read, update, delete) for Projects, Datasets, and FASTQ files
+    - create_project
+    - update_project
+    - delete_project
+    - list_fq_files
+    - create_fq_file
+    - update_fq_file
+    - delete_fq_file
+    - create_fastq_dataset
+    - update_fastq_dataset
+
+**Updates**
+
+- Improve Error messages
+
+**Bugfixes**
+
+- Fix error message when accessing read file path on non-existing datasets
+
 ## [1.1.0] - 2024-12-01
 
 **Features**
