@@ -7,7 +7,7 @@ setup(
     author="Jonathan Alles",
     author_email="Jonathan.Alles@evo-byte.com",
     description="ReadStore Command Line Interface (CLI) Is A Python Package For Accessing Data from the ReadStore API",
-    long_description=open("README.md").read(),
+    long_description=open("docs/readme.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/EvobyteDigitalBiology/readstore-cli",
     packages=find_packages(),
