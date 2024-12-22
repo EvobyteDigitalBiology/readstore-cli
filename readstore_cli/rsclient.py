@@ -256,7 +256,12 @@ class RSClient:
         res = requests.get(fq_file_endpoint + f'{fq_file_id}/',auth=self.auth)
 
         if res.status_code not in [200, 204]:
-            raise rsexceptions.ReadStoreError("get_fq_file Failed")
+            try:
+                detail = res.json()
+            except:
+                detail = "No Message"
+            
+            raise rsexceptions.ReadStoreError(f"get_fq_file failed: {detail}")
         else:
             return res.json()[0]
     
@@ -832,7 +837,7 @@ class RSClient:
                        name: str,
                        description: str,
                        metadata: dict,
-                       dataset_metadata_keys: dict) -> dict:
+                       dataset_metadata_keys: List[str]) -> dict:
         """Create Project
 
         Create a new project in ReadStore
@@ -851,13 +856,15 @@ class RSClient:
         """
         project_endpoint = os.path.join(self.endpoint, self.PROJECT_ENDPOINT)
 
+        dataset_metadata_keys = {key: "" for key in dataset_metadata_keys}
+        
         json = {
             "name": name,
             "description": description,
             "metadata": metadata,
             "dataset_metadata_keys": dataset_metadata_keys
         }
-
+    
         res = requests.post(project_endpoint, json=json, auth=self.auth)
 
         if res.status_code != 201:
@@ -876,7 +883,7 @@ class RSClient:
                        name: str,
                        description: str,
                        metadata: dict,
-                       dataset_metadata_keys: dict) -> dict:        
+                       dataset_metadata_keys: List[str]) -> dict:        
         """Update Project
 
         Update an existing project in ReadStore
@@ -896,6 +903,8 @@ class RSClient:
         """
         project_endpoint = os.path.join(self.endpoint, self.PROJECT_ENDPOINT, f'{project_id}/')
 
+        dataset_metadata_keys = {key: "" for key in dataset_metadata_keys}
+        
         json = {
             "name": name,
             "description": description,
