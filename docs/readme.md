@@ -97,7 +97,7 @@ This should print the ReadStore CLI version
 
 ## ReadStore API<a id="api"></a>
 
-The **ReadStore Basis** server provides a RESTful API for accessing resources via HTTP requests.  
+The **ReadStore Basic** server provides a RESTful API for accessing resources via HTTP requests.  
 This API extends the functionalities of the ReadStore CLI as well as the Python and R SDKs.
 
 ### API Endpoint
