@@ -23,11 +23,20 @@ Functions:
     - configure_list: List configuration settings
     - configure: Configure ReadStore CLI
     - upload: Upload FASTQ Files
-    - list_fq_datasets: List FASTQ Datasets
+    - import_fastq: Import FASTQ Files from Template
+    - upload_pro_data: Upload Processed Data
+    - list_fq_datasets: List Datasets
     - list_projects: List Projects
-    - get_fastq_dataset: Get FASTQ Dataset
+    - list_pro_data: List Processed Data
+    - get_fastq_dataset: Get Dataset
     - get_project: Get Project
-    - download_fq_dataset_attachment: Download FASTQ Dataset Attachment
+    - get_pro_data: Get Processed Data
+    - create_fastq_dataset: Create Dataset
+    - create_project: Create Project
+    - update_fq_dataset: Update Dataset
+    - update_project: Update Project
+    - delete_pro_data: Delete Processed Data
+    - download_fq_dataset_attachment: Download Dataset Attachment
     - download_project_attachment: Download Project Attachment
     - main: Main function for ReadStore CLI
 
@@ -91,17 +100,20 @@ config_parser_list = config_subparser_list.add_parser(
     description="List Credentials and Configuration",
     help='List Credentials and Configuration')
 
+# Add dataset parser
+dataset_parser = subparsers.add_parser("dataset",
+                                       help='Access Datasets')
+dataset_subparser = dataset_parser.add_subparsers()
 
 # List FASTQ Datasets Parser
-list_fq_parser = subparsers.add_parser(
+list_fq_parser = dataset_subparser.add_parser(
     "ls",
     aliases=['list'],
-    help='List FASTQ Datasets',
-    prog='readstore ls',
+    help='List Datasets',
+    prog='readstore dataset ls',
     usage='%(prog)s [options]',
-    description="List FASTQ Datasets",
+    description="List Datasets",
     epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
-
 
 list_fq_parser.add_argument('-pid',
                             '--project-id',
@@ -133,12 +145,12 @@ list_fq_parser.add_argument('--output',
                             choices=OUTPUT_FORMATS)
 
 # Get FASTQ Datasets Parser
-get_fq_parser = subparsers.add_parser(
+get_fq_parser = dataset_subparser.add_parser(
     "get",
-    help='Get FASTQ Datasets',
-    prog='readstore get',
+    help='Get Datasets',
+    prog='readstore dataset get',
     usage='%(prog)s [options]',
-    description="Get FASTQ Datasets and Files",
+    description="Get Datasets and Files",
     epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
 
 get_fq_parser.add_argument('-id',
@@ -203,8 +215,131 @@ get_fq_parser.add_argument('--output',
                            help='Format of command output (see config for default)',
                            choices=['json', 'text', 'csv'])
 
-# Project Parser
+# Create Datasets Parser
+create_fq_parser = dataset_subparser.add_parser(
+    "create",
+    help='Create Dataset',
+    prog='readstore dataset create',
+    usage='%(prog)s [options]',
+    description="Create a Dataset",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
 
+create_fq_parser.add_argument('-n',
+                            '--name',
+                            type=str,
+                            help='Dataset Name',
+                            metavar='',
+                            required=True)
+
+create_fq_parser.add_argument('--description',
+                            type=str,
+                            help='Set Description',
+                            metavar='',
+                            default='')
+
+create_fq_parser.add_argument('-m', 
+                            '--meta',
+                            type=str,
+                            help='''Set metadata as JSON string (e.g '{"key": "value"}')''',
+                            default='{}')
+
+create_fq_parser.add_argument('-pid',
+                            '--project-id',
+                            type=int,
+                            help='Set Project ID',
+                            metavar='',
+                            required=False)
+
+create_fq_parser.add_argument('-p',
+                            '--project-name',
+                            type=str,
+                            help='Set Project Name',
+                            metavar='',
+                            required=False)
+
+
+# Create Datasets Parser
+update_fq_parser = dataset_subparser.add_parser(
+    "update",
+    help='Update Dataset',
+    prog='readstore dataset update',
+    usage='%(prog)s [options]',
+    description="Create a Dataset",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+update_fq_parser.add_argument('-id',
+                            '--id',
+                            type=str,
+                            help='Dataset ID to select',
+                            metavar='',
+                            required=True)
+
+update_fq_parser.add_argument('-n',
+                            '--name',
+                            type=str,
+                            help='Dataset Name',
+                            metavar='',
+                            required=False)
+
+update_fq_parser.add_argument('--description',
+                            type=str,
+                            help='Set Description',
+                            metavar='',
+                            required=False)
+
+update_fq_parser.add_argument('-m', 
+                            '--meta',
+                            type=str,
+                            help='''Set metadata as JSON string (e.g '{"key": "value"}')''',
+                            required=False)
+
+update_fq_parser.add_argument('-pid',
+                            '--project-id',
+                            type=int,
+                            help='Set Project ID',
+                            metavar='',
+                            required=False)
+
+update_fq_parser.add_argument('-p',
+                            '--project-name',
+                            type=str,
+                            help='Set Project Name',
+                            metavar='',
+                            required=False)
+
+# Download Dataset Attachment parser
+download_fq_parser = dataset_subparser.add_parser(
+    "download",
+    help='Download Dataset attachments',
+    prog='readstore dataset download',
+    usage='%(prog)s [options]',
+    description="Download Dataset attachments",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+                                                         
+download_fq_parser.add_argument('-id',
+                                '--id',
+                                type=int,
+                                help='Select Dataset by ID',
+                                metavar='')
+download_fq_parser.add_argument('-n',
+                                '--name',
+                                type=str,
+                                help='Select Dataset by name',
+                                metavar='')
+download_fq_parser.add_argument('-a',
+                                '--attachment',
+                                type=str,
+                                help='Set Attachment Name to download',
+                                metavar='',
+                                required=True)
+download_fq_parser.add_argument('-o',
+                                '--outpath',
+                                type=str,
+                                help='Download path or directory (default . )',
+                                default='.',
+                                metavar='')
+
+# Project Parser
 project_parser = subparsers.add_parser("project",
                                        help='Access Projects')
 
@@ -262,6 +397,68 @@ get_project_parser.add_argument('--output',
                                 help='Format of command output (see config for default)',
                                 choices=['json', 'text', 'csv'])
 
+# Create Project parser
+create_project_parser = project_subparser.add_parser(
+    "create",
+    help='Create Project',
+    prog='readstore project create',
+    usage='%(prog)s [options]',
+    description="Create Project",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+create_project_parser.add_argument('-n',
+                                    '--name',
+                                    type=str,
+                                    help='Project Name',
+                                    metavar='',
+                                    required=True)
+
+create_project_parser.add_argument('--description',
+                                    type=str,
+                                    help='Set Description',
+                                    metavar='',
+                                    default='')
+
+create_project_parser.add_argument('-m',
+                                    '--meta',
+                                    type=str,
+                                    help='''Set metadata as JSON string (e.g '{"key": "value"}')''',
+                                    default='{}')
+
+
+# Create Project parser
+update_project_parser = project_subparser.add_parser(
+    "update",
+    help='Update Project',
+    prog='readstore project update',
+    usage='%(prog)s [options]',
+    description="Update Project",
+    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
+
+update_project_parser.add_argument('-id',
+                                    '--id',
+                                    type=int,
+                                    help='Project ID to select',
+                                    metavar='',
+                                    required=True)
+
+update_project_parser.add_argument('-n',
+                                    '--name',
+                                    type=str,
+                                    help='Project Name',
+                                    metavar='')
+
+update_project_parser.add_argument('--description',
+                                    type=str,
+                                    help='Set Description',
+                                    metavar='')
+
+update_project_parser.add_argument('-m',
+                                    '--meta',
+                                    type=str,
+                                    help='''Set metadata as JSON string (e.g '{"key": "value"}')''')
+
+# Download Project Attachment parser
 download_project_parser = project_subparser.add_parser(
     "download",
     help='Download Project Attachments',
@@ -293,7 +490,7 @@ download_project_parser.add_argument('-o',
                                      default='.',
                                      metavar='')
 
-# Upload Parser
+# Upload FASTQ Parser
 upload_parser = subparsers.add_parser("upload",
                                       help='Upload FASTQ Files',
                                        prog='readstore upload',
@@ -307,8 +504,9 @@ upload_parser.add_argument('fastq_files',
                            nargs='+',
                            help='FASTQ Files to Upload')
 
+# Import FASTQ Parser
 import_parser = subparsers.add_parser("import",
-                                      help='Import from File')
+                                      help='Import FASTQs from File')
 
 import_subparser = import_parser.add_subparsers()
 
@@ -325,42 +523,13 @@ import_fastq_parser.add_argument('fastq_template',
                                 nargs=1,
                                 help='FASTQ Template .csv File')
 
-download_fq_parser = subparsers.add_parser(
-    "download",
-    help='Download Dataset attachments',
-    prog='readstore download',
-    usage='%(prog)s [options]',
-    description="Download Dataset attachments",
-    epilog='For help on a specific command, type "readstore <command> <subcommand> -h"')
-                                                         
-download_fq_parser.add_argument('-id',
-                                '--id',
-                                type=int,
-                                help='Select Dataset by ID',
-                                metavar='')
-download_fq_parser.add_argument('-n',
-                                '--name',
-                                type=str,
-                                help='Select Dataset by name',
-                                metavar='')
-download_fq_parser.add_argument('-a',
-                                '--attachment',
-                                type=str,
-                                help='Set Attachment Name to download',
-                                metavar='',
-                                required=True)
-download_fq_parser.add_argument('-o',
-                                '--outpath',
-                                type=str,
-                                help='Download path or directory (default . )',
-                                default='.',
-                                metavar='')
-
+# Processed Data Parser
 pro_data_parser = subparsers.add_parser(
     "pro-data",
     help='Access Processed Data',
 )
 
+# Upload Processed Data Parser
 pro_data_subparser = pro_data_parser.add_subparsers()
 pro_data_upload_parser = pro_data_subparser.add_parser(
     "upload",
@@ -412,6 +581,7 @@ pro_data_upload_parser.add_argument('pro_data_file',
                                     type=str,
                                     help='Path to Processed Data File to Upload')                           
 
+# List Processed Data Parser
 pro_data_list_parser = pro_data_subparser.add_parser(
     "list",
     aliases=['ls'],
@@ -472,6 +642,7 @@ pro_data_list_parser.add_argument('--output',
                                     help='Format of command output (see config for default)',
                                     choices=OUTPUT_FORMATS)
 
+# Get Processed Data Parser
 pro_data_get_parser = pro_data_subparser.add_parser(
     "get",
     help='Get Processed Data',
@@ -526,8 +697,7 @@ pro_data_get_parser.add_argument('--output',
                                 help='Format of command output (see config for default)',
                                 choices=OUTPUT_FORMATS)
 
-# CONTINUE HERE: Delete Parser
-
+# Delete Pro-Data Parser
 pro_data_delete_parser = pro_data_subparser.add_parser(
     "delete",
     help='Delete Processed Data',
@@ -579,13 +749,18 @@ import_parser.set_defaults(import_run=True)
 import_fastq_parser.set_defaults(import_fastq_run=True)
 
 # Set role argument none for basic version
+dataset_parser.set_defaults(dataset_run=True)
 list_fq_parser.set_defaults(list_fq_run=True, role=None)
 get_fq_parser.set_defaults(get_fq_run=True)
+create_fq_parser.set_defaults(create_fq_run=True)
+update_fq_parser.set_defaults(update_fq_run=True)
 download_fq_parser.set_defaults(download_run=True)
 
 project_parser.set_defaults(project_run=True)
 list_project_parser.set_defaults(list_project_run=True, role=None)
 get_project_parser.set_defaults(get_project_run=True)
+create_project_parser.set_defaults(create_project_run=True)
+update_project_parser.set_defaults(update_project_run=True)
 download_project_parser.set_defaults(download_project_run=True)
 
 pro_data_parser.set_defaults(pro_data_run=True)
@@ -900,7 +1075,11 @@ def upload_pro_data(name: str,
     fq_dataset_id = fq_dataset['id']
     
     # Convert metadata json string to dict
-    metadata = json.loads(metadata)
+    try:
+        metadata = json.loads(metadata)
+    except json.JSONDecodeError:
+        sys.stderr.write('ReadStore Error: Invalid Metadata JSON String\n')
+        return
 
     print(f'ReadStore ProData Upload: Start {pro_data_file}')
     
@@ -1024,6 +1203,7 @@ def list_projects(role: str | None = None,
         projects = client.list_projects(role)
         
         for p in projects:
+            p.pop('dataset_metadata_keys', None)
             if not meta:
                 p.pop('metadata', None)
             if not attachment:
@@ -1339,6 +1519,8 @@ def get_project(project_id: int | None = None,
         project = client.get_project(project_id,
                                      project_name)
         
+        project.pop('dataset_metadata_keys', None)
+        
         if meta:
             out_data = project.pop('metadata', {})
         elif attachment:
@@ -1456,6 +1638,163 @@ def get_pro_data(pro_data_id: int | None = None,
     except rsexceptions.ReadStoreError as e:
         sys.stderr.write(f'ReadStore Error: {e.message}\n')
         return
+
+def create_fq_dataset(name: str,
+                      description: str,
+                      project_ids: List[int],
+                      project_names: List[str],
+                      metadata: str):
+    
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    # Convert metadata json string to dict
+    try:
+        metadata = json.loads(metadata)
+    except json.JSONDecodeError:
+        sys.stderr.write('ReadStore Error: Invalid Metadata JSON String\n')
+        return
+    
+    try:
+        res = client.create_fastq_dataset(name,
+                                        description,
+                                        qc_passed=False,
+                                        paired_end=False,
+                                        index_read=False,
+                                        project_ids = project_ids,
+                                        project_names = project_names,
+                                        metadata = metadata,
+                                        fq_file_r1_id = None,
+                                        fq_file_r2_id = None,
+                                        fq_file_i1_id = None,
+                                        fq_file_i2_id = None)
+
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+
+
+def create_project(name: str,
+                   description: str,
+                   metadata: str):
+    
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    # Convert metadata json string to dict
+    try:
+        metadata = json.loads(metadata)
+    except json.JSONDecodeError:
+        sys.stderr.write('ReadStore Error: Invalid Metadata JSON String\n')
+        return
+    
+    try:
+        res = client.create_project(name,
+                                    description,
+                                    metadata,
+                                    dataset_metadata_keys=[])
+        
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+
+
+def update_fq_dataset(dataset_id: int,
+                      dataset_name: str | None = None,
+                      description: str | None = None,
+                      project_ids: List[int] | None = None,
+                      project_names: List[str] | None = None,
+                      metadata: str | None = None):
+    
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    dataset = client.get_fastq_dataset(dataset_id)
+    
+    if dataset == {}:
+        sys.stderr.write(f'ReadStore Error: Dataset not found\n')
+        return
+    
+    if metadata:
+        try:
+            metadata = json.loads(metadata)
+        except json.JSONDecodeError:
+            sys.stderr.write('ReadStore Error: Invalid Metadata JSON String\n')
+            return
+    
+    # Create new dataset update dict
+    # If update values are defined, use them, else use existing values
+    dataset_update = {
+        "dataset_id": dataset_id,
+        "name": dataset_name if dataset_name else dataset["name"],
+        "description": description if description else dataset["description"],
+        "project_ids": project_ids if project_ids else dataset["project_ids"],
+        "project_names": (
+            project_names if project_names else dataset["project_names"]
+        ),
+        "metadata": metadata if metadata else dataset["metadata"],
+        "qc_passed": dataset["qc_passed"],
+        "paired_end": dataset["paired_end"],
+        "index_read": dataset["index_read"],
+        "fq_file_i1_id": dataset["fq_file_i1"],
+        "fq_file_i2_id": dataset["fq_file_i2"],
+        "fq_file_r1_id": dataset["fq_file_r1"],
+        "fq_file_r2_id": dataset["fq_file_r2"],
+    }
+    
+    try:
+        res = client.update_fastq_dataset(**dataset_update)
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+
+def update_project(project_id: int,
+                   project_name: str | None,
+                   description: str | None,
+                   metadata: str | None):
+    
+    # Get ReadStore Client and Validate Connection
+    try:
+        client = _get_readstore_client()
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        return
+    
+    project = client.get_project(project_id = project_id)
+    
+    if project == {}:
+        sys.stderr.write(f'ReadStore Error: Project not found\n')
+        return
+    
+    if metadata:
+        try:
+            metadata = json.loads(metadata)
+        except json.JSONDecodeError:
+            sys.stderr.write('ReadStore Error: Invalid Metadata JSON String\n')
+            return
+        
+    project_update = {
+        "project_id": project_id,
+        "name": project_name if project_name else project["name"],
+        "description": description if description else project["description"],
+        "metadata": metadata if metadata else project["metadata"],
+        "dataset_metadata_keys": project["dataset_metadata_keys"],
+    }
+    
+    try:
+        res = client.update_project(**project_update)
+    except rsexceptions.ReadStoreError as e:
+        sys.stderr.write(f'ReadStore Error: {e.message}\n')
+        
 
 def delete_pro_data(pro_data_id: int | None = None,
                     name: str | None = None,
@@ -1685,12 +2024,54 @@ def main():
                               index1_path=index1_path,
                               index2_path=index2_path,
                               output=args.output)
+    
+    elif 'create_fq_run' in args:
+        
+        if args.project_id:
+            project_ids = [args.project_id]
+        else:
+            project_ids = []
+        
+        if args.project_name:
+            project_names = [args.project_name]
+        else:
+            project_names = []
+        
+        create_fq_dataset(name=args.name,
+                          description=args.description,
+                          project_ids=project_ids,
+                          project_names=project_names,
+                          metadata=args.meta)
+    
+    elif 'update_fq_run' in args:
+        
+        if args.project_id:
+            project_ids = [args.project_id]
+        else:
+            project_ids = None
+            
+        if args.project_name:
+            project_names = [args.project_name]
+        else:
+            project_names = None
+
+        update_fq_dataset(
+            dataset_id=args.id,
+            dataset_name=args.name,
+            description=args.description,
+            project_ids=project_ids,
+            project_names=project_names,
+            metadata=args.meta
+        )
         
     elif 'download_run' in args:
         download_fq_dataset_attachment(attachment_name=args.attachment,
                                        outpath=args.outpath,
                                        dataset_id=args.id,
                                        dataset_name=args.name)
+    
+    elif 'dataset_run' in args:
+        dataset_parser.print_help()
     
     elif 'list_project_run' in args:
         list_projects(role=args.role,
@@ -1704,6 +2085,17 @@ def main():
                     meta=args.meta,
                     attachment=args.attachment,
                     output=args.output)
+    
+    elif 'create_project_run' in args:
+        create_project(name=args.name,
+                       description=args.description,
+                       metadata=args.meta)
+    
+    elif 'update_project_run' in args:
+        update_project(project_id=args.id,
+                       project_name=args.name,
+                       description=args.description,
+                       metadata=args.meta)
     
     elif 'download_project_run' in args:
         download_project_attachment(attachment_name=args.attachment,
