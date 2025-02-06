@@ -2151,15 +2151,25 @@ def main():
         import_parser.print_help()
 
     elif "pro_data_upload_run" in args:
-        upload_pro_data(
-            name=args.name,
-            pro_data_file=args.pro_data_file,
-            data_type=args.type,
-            description=args.description,
-            metadata=args.meta,
-            dataset_id=args.dataset_id,
-            dataset_name=args.dataset_name,
-        )
+        
+        dataset_id = args.dataset_id
+        dataset_name = args.dataset_name
+        
+        if (not dataset_id) and (not dataset_name):
+            sys.stderr.write(
+                "ReadStore Error: Must Provide Dataset ID (--did) or Dataset Name (--d) to attach ProData to\n"
+            )
+            pro_data_parser.print_help()
+        else:       
+            upload_pro_data(
+                name=args.name,
+                pro_data_file=args.pro_data_file,
+                data_type=args.type,
+                description=args.description,
+                metadata=args.meta,
+                dataset_id=args.dataset_id,
+                dataset_name=args.dataset_name,
+            )
 
     elif "pro_data_list_run" in args:
         list_pro_data(
