@@ -20,7 +20,7 @@ More infos on the ReadStore website https://evo-byte.com/readstore/
 
 Blog posts and How-Tos: https://evo-byte.com/blog/
 
-For general questions reach out to info@evo-byte.com
+For general questions reach out to info@evo-byte.com or in case of technical problems to support@evo-byte.com
 
 Happy analysis :)
 
@@ -183,13 +183,13 @@ Check the `Batch Check In` button to import several Dataset at once.
 
 The ReadStore CLI enables programmatic access to Datasets and FASTQ files. Some examples are:
 
-`readstore list`  List all FASTQ files
+`readstore dataset list`  List all FASTQ files
 
-`readstore get --id 25`  Get detailed view on Dataset 25
+`readstore dataset get --id 25`  Get detailed view on Dataset 25
 
-`readstore get --id 25 --read1-path`  Get path for Read1 FASTQ file
+`readstore dataset get --id 25 --read1-path`  Get path for Read1 FASTQ file
 
-`readstore get --id 25 --meta`  Get metadata for Dataset 25
+`readstore dataset get --id 25 --meta`  Get metadata for Dataset 25
 
 `readstore project get --name cohort1 --attachment`  Get attachment files for Project "cohort1"
 
@@ -280,13 +280,15 @@ positional arguments:
   fastq_template  FASTQ Template .csv File
 ```
 
-### Access Projects<a id="projectaccess"></a>
+### Access and Create Projects<a id="projectaccess"></a>
 
-There are 3 commands for accessing projects, `readstore project list`, `readstore project get` and `readstore project download`.
+There are 3 commands for accessing projects and related data and 2 commands for creating and updating projects
 
 - `list` provides an overview of project, metadata and attachments
 - `get` provides detailed information on individual projects and to its metadata and attachments
 - `download` lets you download attachment files of a project from the ReadStore database
+- `create` lets you create an empty project from the command line
+- `update` lets you update project attributes
 
 ####  readstore project list
 
@@ -364,18 +366,72 @@ Use the `--outpath` to set a directory to download files to.
 Example `readstore project download --id 2 -a ProjectQC.pptx -o ~/downloads`
 
 
+####  readstore project create
+
+```
+usage: readstore project create [options]
+
+Create Project
+
+options:
+  -h, --help            show this help message and exit
+  -n , --name           Project Name
+  --description         Set Description (default '')
+  -m META, --meta META  Set metadata as JSON string (e.g '{"key": "value"}') (default '{}')
+```
+
+Create a new project.
+
+`-n/--name` name for new project (required)
+
+`--description` project description. Defaults to empty
+
+`-m/--meta` enables to set metadata for the project (optional). This attribute must be a json-formatted string, e.g. '{"key": "value"}'. Defaults to empty dictionary (`'{}'`)
+
+Example `readstore project create -n TestProject --description "My First Test Project" --meta '{"cost_center" : "A1526"}'`
+
+
+####  readstore project update
+
+```
+usage: readstore project update [options]
+
+Update Project
+
+options:
+  -h, --help            show this help message and exit
+  -id , --id            Project ID to select
+  -n , --name           Project Name (optional)
+  --description         Set Description (optional)
+  -m META, --meta META  Set metadata as JSON string (e.g '{"key": "value"}') (optional)
+
+```
+
+The project to update must be selected by its `id`. Attributes which are optional and not specified remain unchanged.
+
+`-n/--name` name for project to update (optional)
+
+`--description` project description to update (optional)
+
+`-m/--meta` enables to update metadata for the project (optional). This attribute must be a json-formatted string, e.g. '{"key": "value"}'
+
+Example `readstore project update -id 1 -n UpdateTestProject --description "My updated First Test Project" --meta '{"cost_center_update" : "A1526"}'`
+
+
 ### Access Datasets and FASTQ Files<a id="datasetaccess"></a>
 
-There are 3 commands for accessing dataset, `readstore list`, `readstore get` and `readstore download`.
+There are 3 commands for accessing dataset, and 2 commands for update and create operations.
 
 - `list` provides an overview of datasets, metadata and attachments
 - `get` provides detailed information on an individual dataset and to its metadata and attachments and individual FASTQ read files and statistics.
 - `download` lets you download attachment files of a dataset
+- `create` lets you create an empty dataset from the command line and assign to a project
+- `update` lets you update dataset attributes
 
-####  readstore list
+####  readstore dataset list
 
 ```
-usage: readstore ls [options]
+usage: readstore dataset ls [options]
 
 List FASTQ Datasets
 
@@ -401,10 +457,10 @@ Show dataset id, name, description, qc_passed, paired_end, index_read, project_i
 
 Adapt the output format of the command using the `--output` options.
 
-####  readstore get
+####  readstore dataset get
 
 ```
-usage: readstore get [options]
+usage: readstore dataset get [options]
 
 Get FASTQ Datasets and Files
 
@@ -444,10 +500,10 @@ Example: `readstore get --id 2`
 Example: `readstore get --id 2 --read1-path`
 
 
-####  readstore download
+####  readstore dataset download
 
 ```
-usage: readstore download [options]
+usage: readstore dataset download [options]
 
 Download Dataset attachments
 
@@ -466,6 +522,71 @@ With the `--attachment` argument you specify the name of the attachment file to 
 Use the `--outpath` to set a directory to download files to.
 
 Example `readstore download --id 2 -a myAttachment.csv -o ~/downloads`
+
+
+
+####  readstore dataset create
+
+```
+usage: readstore dataset create [options]
+
+Create a Dataset
+
+options:
+  -h, --help            show this help message and exit
+  -n , --name           Dataset Name
+  --description         Set Description (default '')
+  -m META, --meta META  Set metadata as JSON string (e.g '{"key": "value"}') (default '{}')
+  -pid , --project-id   Set Project ID (optional)
+  -p , --project-name   Set Project Name (optional)
+```
+
+Create an empty dataset. 
+
+`-n/--name` name for new project (required)
+
+`--description` project description. Defaults to empty
+
+`-m/--meta` enables to set metadata for the project (optional). This attribute must be a json-formatted string, e.g. '{"key": "value"}'. Defaults to empty dictionary (`'{}'`)
+
+`-pid/--project-id` enables to attach dataset to a project defined by project id (optional)
+
+`-p/--project-name` enables to attach dataset to a project defined by project name (optional)
+
+
+Example `readstore dataset create -n Dataset1 --description "A Dataset" --meta '{"replicate" : 1}' -p TestProject`
+
+
+####  readstore dataset update
+
+```
+usage: readstore dataset update [options]
+
+Update a Dataset
+
+options:
+  -h, --help            show this help message and exit
+  -id , --id            Dataset ID to select
+  -n , --name           Dataset Name (optional)
+  --description         Set Description (default '') (optional)
+  -m META, --meta META  Set metadata as JSON string (e.g '{"key": "value"}') (optional)
+  -pid , --project-id   Set Project ID (optional)
+  -p , --project-name   Set Project Name (optional)
+```
+
+The dataset to update must be selected by its `id`. Attributes which are optional and not specified remain unchanged.
+
+`-n/--name` name for dataset to update (optional)
+
+`--description` dataset description to update (optional)
+
+`-m/--meta` enables to update metadata for the project (optional). This attribute must be a json-formatted string, e.g. '{"key": "value"}'
+
+`-pid/--project-id` update project the dataset is attached to by its project id (optional)
+
+`-p/--project-name` update project the dataset is attached to by its project name (optional)
+
+Example `readstore dattaset update -id 1 -n UpdateName --meta '{"replicate_update" : "1"}' -pid 12`
 
 ### Access **Pro**cessed **Data**<a id="prodata"></a>
 
