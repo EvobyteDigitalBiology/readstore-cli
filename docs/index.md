@@ -7,3 +7,5 @@ The CLI can be run from your shell or terminal and is designed for seamless inte
 By embedding the ReadStore CLI in your bioinformatics workflows, you can improve efficiency, reduce manual tasks, and ensure your data is readily accessible for analysis and collaboration.
 
 Find more information on <a href=www.evo-byte.com/readstore>www.evo-byte.com/readstore</a>
+
+For technical questions or problems with the install please contact <a href="mailto:support@evo-byte.com">support@evo-byte.com</a>
