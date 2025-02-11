@@ -214,26 +214,26 @@ create_fq_parser.add_argument(
 )
 
 create_fq_parser.add_argument(
-    "--description", type=str, help="Set Description", metavar="", default=""
+    "--description", type=str, help="Set Description (default '')", metavar="", default=""
 )
 
 create_fq_parser.add_argument(
     "-m",
     "--meta",
     type=str,
-    help="""Set metadata as JSON string (e.g '{"key": "value"}')""",
+    help="""Set metadata as JSON string (e.g '{"key": "value"}') (default '{}')""",
     default="{}",
 )
 
 create_fq_parser.add_argument(
-    "-pid", "--project-id", type=int, help="Set Project ID", metavar="", required=False
+    "-pid", "--project-id", type=int, help="Set Project ID (optional)", metavar="", required=False
 )
 
 create_fq_parser.add_argument(
     "-p",
     "--project-name",
     type=str,
-    help="Set Project Name",
+    help="Set Project Name (optional)",
     metavar="",
     required=False,
 )
@@ -254,30 +254,30 @@ update_fq_parser.add_argument(
 )
 
 update_fq_parser.add_argument(
-    "-n", "--name", type=str, help="Dataset Name", metavar="", required=False
+    "-n", "--name", type=str, help="Dataset Name (optional)", metavar="", required=False
 )
 
 update_fq_parser.add_argument(
-    "--description", type=str, help="Set Description", metavar="", required=False
+    "--description", type=str, help="Set Description (default '') (optional)", metavar="", required=False
 )
 
 update_fq_parser.add_argument(
     "-m",
     "--meta",
     type=str,
-    help="""Set metadata as JSON string (e.g '{"key": "value"}')""",
+    help="""Set metadata as JSON string (e.g '{"key": "value"}') (optional)""",
     required=False,
 )
 
 update_fq_parser.add_argument(
-    "-pid", "--project-id", type=int, help="Set Project ID", metavar="", required=False
+    "-pid", "--project-id", type=int, help="Set Project ID (optional)", metavar="", required=False
 )
 
 update_fq_parser.add_argument(
     "-p",
     "--project-name",
     type=str,
-    help="Set Project Name",
+    help="Set Project Name (optional)",
     metavar="",
     required=False,
 )
@@ -385,14 +385,14 @@ create_project_parser.add_argument(
 )
 
 create_project_parser.add_argument(
-    "--description", type=str, help="Set Description", metavar="", default=""
+    "--description", type=str, help="Set Description (default '')", metavar="", default=""
 )
 
 create_project_parser.add_argument(
     "-m",
     "--meta",
     type=str,
-    help="""Set metadata as JSON string (e.g '{"key": "value"}')""",
+    help="""Set metadata as JSON string (e.g '{"key": "value"}') (default '{}')""",
     default="{}",
 )
 
@@ -412,18 +412,18 @@ update_project_parser.add_argument(
 )
 
 update_project_parser.add_argument(
-    "-n", "--name", type=str, help="Project Name", metavar=""
+    "-n", "--name", type=str, help="Project Name (optional)", metavar=""
 )
 
 update_project_parser.add_argument(
-    "--description", type=str, help="Set Description", metavar=""
+    "--description", type=str, help="Set Description (optional)", metavar=""
 )
 
 update_project_parser.add_argument(
     "-m",
     "--meta",
     type=str,
-    help="""Set metadata as JSON string (e.g '{"key": "value"}')""",
+    help="""Set metadata as JSON string (e.g '{"key": "value"}') (optional)""",
 )
 
 # Download Project Attachment parser
