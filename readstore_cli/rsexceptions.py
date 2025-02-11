@@ -1,6 +1,6 @@
 # readstore-cli/readstore_cli/rsexceptions.py
 
-# Copyright 2024 EVOBYTE Digital Biology Dr. Jonathan Alles
+# Copyright 2024-2025 EVOBYTE Digital Biology Dr. Jonathan Alles
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
