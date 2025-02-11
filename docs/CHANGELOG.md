@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0] - 2025-02-11
+
+**Features**
+
+- Add create and update methods for projects and datasets into command line
+
+**Updates**
+
+- Improve code format
+
+**Bugfixes**
+
+- ProData upload ensure dataset id OR name is specified
+
 ## [1.2.0] - 2024-12-22
 
 **Features**
